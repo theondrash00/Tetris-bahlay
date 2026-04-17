@@ -111,6 +111,15 @@ Tetris-bahlay/
   - **Game screen:** left panel below SCORE / LEVEL / LINES
 - Controls legend intentionally removed from the right panel (kept clean for NEXT piece + opponent board)
 
+## Difficulty Selector UX (post-launch)
+- **Color-coded level buttons** — 1–3 green, 4–6 yellow, 7–8 orange, 9–10 red; active button uses tier color
+- **Dynamic hint line** below selector updates on each click: speed label + score multiplier in matching color (e.g. *"Fast · 5× score"*)
+
+## What's New screen (post-launch)
+- **WHAT'S NEW ✦** button at bottom of menu (dimmed outline style) opens a dedicated changelog screen
+- Lists 4 entries with NEW/UPDATE badges: VS Bot, instant rematch, multiplayer UX, controls legend
+- BACK returns to menu
+
 ## VS Bot Feature (post-launch)
 - **VS BOT button** in menu → bot-select-screen with 4 bot cards (Rookie/Cleaner/Aggressor/Pro)
 - **Client-side only** — no server. Two `Game` instances run in same tab; bot's game uses a hidden canvas.
