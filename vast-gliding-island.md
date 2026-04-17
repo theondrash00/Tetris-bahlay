@@ -105,6 +105,12 @@ Tetris-bahlay/
 ## Known Bugs Fixed
 - **Multiplayer "Room is Full" on join:** The joining client wasn't storing the room code before receiving the `room:joined` event, causing the UI to not show the room panel. Fix: `multiplayer.js` now sets `this.roomCode` in `joinRoom()` before emitting the socket event. `main.js` `roomJoined` callback now calls `UI.showRoomInfo()` for the joiner too.
 
+## UI Changes (post-launch)
+- **Controls legend added** — key badges (green background, black text) with action descriptions. Visible in two places:
+  - **Menu screen:** right sidebar separated by a vertical border line, next to the title/buttons
+  - **Game screen:** left panel below SCORE / LEVEL / LINES
+- Controls legend intentionally removed from the right panel (kept clean for NEXT piece + opponent board)
+
 ---
 
 ## Deployment
