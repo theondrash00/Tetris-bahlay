@@ -74,7 +74,10 @@
       <div id="room-info" class="room-info hidden">
         <div class="room-code-display">
           <label>ROOM CODE</label>
-          <span id="room-code-value"></span>
+          <div class="room-code-row">
+            <span id="room-code-value"></span>
+            <button id="btn-copy-code" class="btn-copy" title="Copy code">⧉</button>
+          </div>
         </div>
         <div id="players-list" class="players-list"></div>
         <button id="btn-ready" class="btn btn-primary">READY</button>
@@ -114,6 +117,7 @@
       </div>
 
       <div class="game-canvas-wrapper">
+        <div id="my-name-label" class="player-name-label hidden"></div>
         <canvas id="game-canvas" width="300" height="600"></canvas>
       </div>
 
@@ -175,6 +179,7 @@
       </div>
       <div class="gameover-buttons">
         <button id="btn-play-again" class="btn btn-primary">PLAY AGAIN</button>
+        <button id="btn-rematch" class="btn btn-secondary hidden">REMATCH</button>
         <button id="btn-back-to-menu" class="btn btn-outline">MENU</button>
       </div>
     </div>

@@ -328,11 +328,44 @@ body {
   margin-bottom: 0.3rem;
 }
 
+.room-code-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .room-code-display span {
   font-size: 2.5rem;
   font-weight: 900;
   letter-spacing: 0.4em;
   color: var(--accent-secondary);
+}
+
+.btn-copy {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.btn-copy:hover {
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+}
+
+/* Player name label above game canvas */
+.player-name-label {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--dk-green);
+  padding-bottom: 0.3rem;
 }
 
 .players-list {

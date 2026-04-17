@@ -9,8 +9,9 @@ let game = null;
 let multiplayer = null;
 let isMultiplayer = false;
 let selectedDifficulty = 1;
-let renderer = null; // For rendering next piece and opponent board
+let renderer = null;
 let opponentName = '';
+let myName = 'Player';
 
 // --- Difficulty selection ---
 const diffButtons = document.getElementById('difficulty-buttons');
@@ -51,11 +52,18 @@ document.getElementById('btn-back-scores').addEventListener('click', () => {
 document.getElementById('btn-play-again').addEventListener('click', () => {
   UI.hideGameOver();
   UI.hideHighScoreEntry();
-  if (isMultiplayer) {
-    UI.showScreen('lobby-screen');
-  } else {
-    startSoloGame();
+  startSoloGame();
+});
+
+document.getElementById('btn-rematch').addEventListener('click', () => {
+  UI.hideGameOver();
+  UI.hideHighScoreEntry();
+  // Re-enter the lobby with same connection — server will reset room state
+  if (multiplayer) {
+    multiplayer.leaveRoom();
   }
+  UI.showScreen('lobby-screen');
+  UI.hideRoomInfo();
 });
 
 document.getElementById('btn-back-to-menu').addEventListener('click', () => {
@@ -179,9 +187,9 @@ function setupMultiplayerCallbacks() {
 
   multiplayer.on('countdown', (data) => {
     if (data.seconds === 3) {
-      // Prepare game screen
       UI.showScreen('game-screen');
       UI.showOpponentSection(opponentName);
+      UI.setMyNameLabel(myName);
     }
     Sound.playCountdown();
     const overlay = document.getElementById('overlay-countdown');
@@ -286,10 +294,18 @@ function startMultiplayerGame() {
 }
 
 // --- Lobby buttons ---
+document.getElementById('btn-copy-code').addEventListener('click', () => {
+  const code = document.getElementById('room-code-value').textContent;
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    UI.showToast('Room code copied!');
+  });
+});
+
 document.getElementById('btn-create-room').addEventListener('click', () => {
   if (!multiplayer) return;
-  const name = document.getElementById('player-name').value.trim() || 'Player';
-  multiplayer.createRoom(name, selectedDifficulty);
+  myName = document.getElementById('player-name').value.trim() || 'Player';
+  multiplayer.createRoom(myName, selectedDifficulty);
 });
 
 document.getElementById('btn-join-room').addEventListener('click', () => {
@@ -299,8 +315,8 @@ document.getElementById('btn-join-room').addEventListener('click', () => {
     UI.showToast('Enter a 4-character room code');
     return;
   }
-  const name = document.getElementById('player-name').value.trim() || 'Player';
-  multiplayer.joinRoom(code, name);
+  myName = document.getElementById('player-name').value.trim() || 'Player';
+  multiplayer.joinRoom(code, myName);
 });
 
 document.getElementById('btn-ready').addEventListener('click', () => {

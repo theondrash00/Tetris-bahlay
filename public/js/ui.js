@@ -28,7 +28,14 @@ export function showOpponentSection(name) {
   const section = document.getElementById('opponent-section');
   if (section) section.classList.remove('hidden');
   const label = document.getElementById('opponent-name-label');
-  if (label) label.textContent = name || 'OPPONENT';
+  if (label) label.textContent = (name || 'OPPONENT').toUpperCase();
+}
+
+export function setMyNameLabel(name) {
+  const el = document.getElementById('my-name-label');
+  if (!el) return;
+  el.textContent = name || '';
+  el.classList.toggle('hidden', !name);
 }
 
 export function hideOpponentSection() {
@@ -70,13 +77,19 @@ export function showGameOver(data, isMultiplayer = false) {
   const overlay = document.getElementById('overlay-gameover');
   const title = document.getElementById('gameover-title');
   const stats = document.getElementById('gameover-stats');
+  const btnPlayAgain = document.getElementById('btn-play-again');
+  const btnRematch = document.getElementById('btn-rematch');
 
   if (isMultiplayer && data.won !== undefined) {
     title.textContent = data.won ? 'YOU WIN!' : 'YOU LOSE';
     title.style.color = data.won ? 'var(--dk-green)' : 'var(--dk-orange)';
+    btnPlayAgain.classList.add('hidden');
+    btnRematch.classList.remove('hidden');
   } else {
     title.textContent = 'GAME OVER';
     title.style.color = 'var(--dk-orange)';
+    btnPlayAgain.classList.remove('hidden');
+    btnRematch.classList.add('hidden');
   }
 
   stats.innerHTML = `
