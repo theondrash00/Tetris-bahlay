@@ -234,10 +234,35 @@ body {
 }
 
 .diff-btn.active {
-  background: var(--accent-primary);
   color: var(--dk-black);
-  border-color: var(--accent-primary);
 }
+
+/* Level color tiers — applied via JS when active */
+.diff-btn.active[data-level="1"],
+.diff-btn.active[data-level="2"],
+.diff-btn.active[data-level="3"]  { background: #9ac434; border-color: #9ac434; }
+
+.diff-btn.active[data-level="4"],
+.diff-btn.active[data-level="5"],
+.diff-btn.active[data-level="6"]  { background: #f0a800; border-color: #f0a800; }
+
+.diff-btn.active[data-level="7"],
+.diff-btn.active[data-level="8"]  { background: #f46c22; border-color: #f46c22; }
+
+.diff-btn.active[data-level="9"],
+.diff-btn.active[data-level="10"] { background: #e03030; border-color: #e03030; }
+
+.difficulty-hint {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  min-height: 1em;
+  transition: color 0.2s ease;
+}
+
+.difficulty-hint .hint-speed { font-weight: 700; }
+.difficulty-hint .hint-score { font-weight: 700; }
 
 /* Input */
 .input {

@@ -23,6 +23,28 @@ let lastBotKey = 'rookie';
 let botGameOverHandled = false;
 
 // --- Difficulty selection ---
+const LEVEL_HINTS = [
+  null,
+  { speed: 'Slow',     score: '1×',  color: '#9ac434' }, // 1
+  { speed: 'Slow',     score: '2×',  color: '#9ac434' }, // 2
+  { speed: 'Medium',   score: '3×',  color: '#9ac434' }, // 3
+  { speed: 'Medium',   score: '4×',  color: '#f0a800' }, // 4
+  { speed: 'Fast',     score: '5×',  color: '#f0a800' }, // 5
+  { speed: 'Fast',     score: '6×',  color: '#f0a800' }, // 6
+  { speed: 'Very fast', score: '7×', color: '#f46c22' }, // 7
+  { speed: 'Very fast', score: '8×', color: '#f46c22' }, // 8
+  { speed: 'Extreme',  score: '9×',  color: '#e03030' }, // 9
+  { speed: 'Max speed', score: '10×', color: '#e03030' }, // 10
+];
+
+function updateDifficultyHint(level) {
+  const hint = document.getElementById('difficulty-hint');
+  if (!hint) return;
+  const data = LEVEL_HINTS[level];
+  if (!data) return;
+  hint.innerHTML = `<span class="hint-speed" style="color:${data.color}">${data.speed}</span> &nbsp;·&nbsp; <span class="hint-score" style="color:${data.color}">${data.score} score</span>`;
+}
+
 const diffButtons = document.getElementById('difficulty-buttons');
 diffButtons.addEventListener('click', (e) => {
   const btn = e.target.closest('.diff-btn');
@@ -30,7 +52,10 @@ diffButtons.addEventListener('click', (e) => {
   diffButtons.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedDifficulty = parseInt(btn.dataset.level);
+  updateDifficultyHint(selectedDifficulty);
 });
+
+updateDifficultyHint(1);
 
 // --- Menu buttons ---
 document.getElementById('btn-solo').addEventListener('click', () => {
