@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TETRIS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Menu Screen -->
+  <div id="menu-screen" class="screen active">
+    <div class="menu-container">
+      <h1 class="game-title">TETRIS</h1>
+      <div class="menu-buttons">
+        <button id="btn-solo" class="btn btn-primary">SOLO PLAY</button>
+        <button id="btn-multiplayer" class="btn btn-secondary">MULTIPLAYER</button>
+        <button id="btn-highscores" class="btn btn-outline">HIGH SCORES</button>
+      </div>
+      <div class="difficulty-select">
+        <label>STARTING LEVEL</label>
+        <div class="difficulty-buttons" id="difficulty-buttons">
+          <button class="diff-btn active" data-level="1">1</button>
+          <button class="diff-btn" data-level="2">2</button>
+          <button class="diff-btn" data-level="3">3</button>
+          <button class="diff-btn" data-level="4">4</button>
+          <button class="diff-btn" data-level="5">5</button>
+          <button class="diff-btn" data-level="6">6</button>
+          <button class="diff-btn" data-level="7">7</button>
+          <button class="diff-btn" data-level="8">8</button>
+          <button class="diff-btn" data-level="9">9</button>
+          <button class="diff-btn" data-level="10">10</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lobby Screen -->
+  <div id="lobby-screen" class="screen">
+    <div class="lobby-container">
+      <h2>MULTIPLAYER</h2>
+      <div class="lobby-actions">
+        <div class="lobby-section">
+          <label>PLAYER NAME</label>
+          <input type="text" id="player-name" class="input" maxlength="12" placeholder="Enter name..." value="Player">
+        </div>
+        <div class="lobby-section">
+          <button id="btn-create-room" class="btn btn-primary">CREATE ROOM</button>
+        </div>
+        <div class="lobby-divider">OR</div>
+        <div class="lobby-section">
+          <label>ROOM CODE</label>
+          <input type="text" id="room-code-input" class="input" maxlength="4" placeholder="ABCD" style="text-transform: uppercase;">
+          <button id="btn-join-room" class="btn btn-secondary">JOIN ROOM</button>
+        </div>
+      </div>
+
+      <div id="room-info" class="room-info hidden">
+        <div class="room-code-display">
+          <label>ROOM CODE</label>
+          <span id="room-code-value"></span>
+        </div>
+        <div id="players-list" class="players-list"></div>
+        <button id="btn-ready" class="btn btn-primary">READY</button>
+        <button id="btn-leave-room" class="btn btn-outline">LEAVE</button>
+      </div>
+
+      <button id="btn-back-menu" class="btn btn-outline">BACK</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen" class="screen">
+    <div class="game-layout">
+      <div class="side-panel left-panel">
+        <div class="info-box">
+          <label>SCORE</label>
+          <div id="score-display" class="info-value">0</div>
+        </div>
+        <div class="info-box">
+          <label>LEVEL</label>
+          <div id="level-display" class="info-value">1</div>
+        </div>
+        <div class="info-box">
+          <label>LINES</label>
+          <div id="lines-display" class="info-value">0</div>
+        </div>
+      </div>
+
+      <div class="game-canvas-wrapper">
+        <canvas id="game-canvas" width="300" height="600"></canvas>
+      </div>
+
+      <div class="side-panel right-panel">
+        <div class="info-box">
+          <label>NEXT</label>
+          <canvas id="next-piece-canvas" width="120" height="120"></canvas>
+        </div>
+
+        <div id="opponent-section" class="opponent-section hidden">
+          <div class="info-box">
+            <label id="opponent-name-label">OPPONENT</label>
+            <canvas id="opponent-canvas" width="150" height="300"></canvas>
+          </div>
+          <div class="info-box">
+            <label>OPP SCORE</label>
+            <div id="opponent-score-display" class="info-value small">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- High Scores Screen -->
+  <div id="highscores-screen" class="screen">
+    <div class="highscores-container">
+      <h2>HIGH SCORES</h2>
+      <table id="highscores-table" class="highscores-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>NAME</th>
+            <th>SCORE</th>
+            <th>LINES</th>
+            <th>LEVEL</th>
+          </tr>
+        </thead>
+        <tbody id="highscores-body"></tbody>
+      </table>
+      <p id="no-scores-msg" class="no-scores">No scores yet. Play a game!</p>
+      <button id="btn-back-scores" class="btn btn-outline">BACK</button>
+    </div>
+  </div>
+
+  <!-- Countdown Overlay -->
+  <div id="overlay-countdown" class="overlay hidden">
+    <div id="countdown-text" class="countdown-text"></div>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div id="overlay-gameover" class="overlay hidden">
+    <div class="gameover-container">
+      <h2 id="gameover-title">GAME OVER</h2>
+      <div id="gameover-stats" class="gameover-stats"></div>
+      <div id="gameover-highscore" class="gameover-highscore hidden">
+        <label>NEW HIGH SCORE! ENTER NAME:</label>
+        <input type="text" id="highscore-name" class="input" maxlength="12" placeholder="Name...">
+        <button id="btn-save-score" class="btn btn-primary">SAVE</button>
+      </div>
+      <div class="gameover-buttons">
+        <button id="btn-play-again" class="btn btn-primary">PLAY AGAIN</button>
+        <button id="btn-back-to-menu" class="btn btn-outline">MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
