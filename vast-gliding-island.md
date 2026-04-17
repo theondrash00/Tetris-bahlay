@@ -111,6 +111,17 @@ Tetris-bahlay/
   - **Game screen:** left panel below SCORE / LEVEL / LINES
 - Controls legend intentionally removed from the right panel (kept clean for NEXT piece + opponent board)
 
+## Multiplayer UX Improvements (post-launch)
+- **Copy room code button** — `⧉` icon next to room code in lobby, copies to clipboard, shows toast
+- **Player name above board** — your name shown above the game canvas in green during multiplayer (from lobby name input)
+- **Rematch flow (Option B):**
+  - Player A clicks REMATCH → button disables, toast shown, `game:rematch` sent to server
+  - Server notifies opponent via `rematch:requested` event
+  - Opponent sees toast: "[Name] wants a rematch! Click REMATCH to accept."
+  - When both have sent `game:rematch`, server triggers 3-2-1 countdown immediately → new game starts
+  - No lobby re-entry needed, same room/connection reused
+  - **Note:** server must be restarted to pick up new socket handlers after code changes
+
 ---
 
 ## Deployment
