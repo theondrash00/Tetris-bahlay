@@ -24,6 +24,7 @@ export class Game {
     this.onBoardUpdate = options.onBoardUpdate || (() => {});
     this.onNextPiece = options.onNextPiece || (() => {});
     this.onGarbage = options.onGarbage || (() => {});
+    this.noKeyboard = options.noKeyboard || false;
 
     this.board = null;
     this.bag = null;
@@ -73,8 +74,10 @@ export class Game {
 
     this.spawnPiece();
 
-    document.addEventListener('keydown', this.boundKeyDown);
-    document.addEventListener('keyup', this.boundKeyUp);
+    if (!this.noKeyboard) {
+      document.addEventListener('keydown', this.boundKeyDown);
+      document.addEventListener('keyup', this.boundKeyUp);
+    }
 
     this.lastTick = performance.now();
     this.lastFrame = performance.now();
@@ -88,8 +91,10 @@ export class Game {
       this.animFrameId = null;
     }
     this.clearDAS();
-    document.removeEventListener('keydown', this.boundKeyDown);
-    document.removeEventListener('keyup', this.boundKeyUp);
+    if (!this.noKeyboard) {
+      document.removeEventListener('keydown', this.boundKeyDown);
+      document.removeEventListener('keyup', this.boundKeyUp);
+    }
   }
 
   spawnPiece() {
@@ -247,8 +252,10 @@ export class Game {
     requestAnimationFrame(animateGameOver);
 
     this.clearDAS();
-    document.removeEventListener('keydown', this.boundKeyDown);
-    document.removeEventListener('keyup', this.boundKeyUp);
+    if (!this.noKeyboard) {
+      document.removeEventListener('keydown', this.boundKeyDown);
+      document.removeEventListener('keyup', this.boundKeyUp);
+    }
 
     this.onGameOver({
       score: this.score,

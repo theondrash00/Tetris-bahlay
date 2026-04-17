@@ -73,23 +73,30 @@ export function showCountdown(seconds, callback) {
   tick();
 }
 
-export function showGameOver(data, isMultiplayer = false) {
+export function showGameOver(data, isMultiplayer = false, isBotGame = false) {
   const overlay = document.getElementById('overlay-gameover');
   const title = document.getElementById('gameover-title');
   const stats = document.getElementById('gameover-stats');
   const btnPlayAgain = document.getElementById('btn-play-again');
   const btnRematch = document.getElementById('btn-rematch');
+  const btnRematchBot = document.getElementById('btn-rematch-bot');
 
-  if (isMultiplayer && data.won !== undefined) {
+  btnPlayAgain.classList.add('hidden');
+  btnRematch.classList.add('hidden');
+  btnRematchBot.classList.add('hidden');
+
+  if (isBotGame && data.won !== undefined) {
     title.textContent = data.won ? 'YOU WIN!' : 'YOU LOSE';
     title.style.color = data.won ? 'var(--dk-green)' : 'var(--dk-orange)';
-    btnPlayAgain.classList.add('hidden');
+    btnRematchBot.classList.remove('hidden');
+  } else if (isMultiplayer && data.won !== undefined) {
+    title.textContent = data.won ? 'YOU WIN!' : 'YOU LOSE';
+    title.style.color = data.won ? 'var(--dk-green)' : 'var(--dk-orange)';
     btnRematch.classList.remove('hidden');
   } else {
     title.textContent = 'GAME OVER';
     title.style.color = 'var(--dk-orange)';
     btnPlayAgain.classList.remove('hidden');
-    btnRematch.classList.add('hidden');
   }
 
   stats.innerHTML = `

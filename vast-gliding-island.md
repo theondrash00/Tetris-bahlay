@@ -7,7 +7,7 @@ Built a modern Tetris game from scratch with online multiplayer using the DraftK
 
 ## Status: COMPLETE ✅
 
-All phases built, tested, and deployed.
+All phases built, tested, and deployed. VS Bot feature added (Phase 5).
 
 ---
 
@@ -110,6 +110,13 @@ Tetris-bahlay/
   - **Menu screen:** right sidebar separated by a vertical border line, next to the title/buttons
   - **Game screen:** left panel below SCORE / LEVEL / LINES
 - Controls legend intentionally removed from the right panel (kept clean for NEXT piece + opponent board)
+
+## VS Bot Feature (post-launch)
+- **VS BOT button** in menu → bot-select-screen with 4 bot cards (Rookie/Cleaner/Aggressor/Pro)
+- **Client-side only** — no server. Two `Game` instances run in same tab; bot's game uses a hidden canvas.
+- **BotPlayer class** (`public/js/bot.js`) — board evaluator (holes, height, bumpiness, lines), `setTimeout`-based think loop, configurable think speed + error rate per personality
+- **Garbage wired directly** — player's `onGarbage` → botGame.receiveGarbage() and vice versa
+- **Game over overlay** shows REMATCH button for bot games; saves high score if player wins
 
 ## Multiplayer UX Improvements (post-launch)
 - **Copy room code button** — `⧉` icon next to room code in lobby, copies to clipboard, shows toast

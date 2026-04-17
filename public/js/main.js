@@ -1,6 +1,7 @@
 import { Game } from './game.js';
 import { Renderer } from './renderer.js';
 import { MultiplayerClient } from './multiplayer.js';
+import { BotPlayer, BOT_PERSONALITIES } from './bot.js';
 import * as UI from './ui.js';
 import * as HighScores from './highscores.js';
 import * as Sound from './sound.js';
@@ -8,10 +9,18 @@ import * as Sound from './sound.js';
 let game = null;
 let multiplayer = null;
 let isMultiplayer = false;
+let isBotGame = false;
 let selectedDifficulty = 1;
 let renderer = null;
 let opponentName = '';
 let myName = 'Player';
+
+// Bot state
+let botGame = null;
+let botPlayer = null;
+let botSyncInterval = null;
+let lastBotKey = 'rookie';
+let botGameOverHandled = false;
 
 // --- Difficulty selection ---
 const diffButtons = document.getElementById('difficulty-buttons');
@@ -28,14 +37,22 @@ document.getElementById('btn-solo').addEventListener('click', () => {
   Sound.initAudio();
   Sound.resumeAudio();
   isMultiplayer = false;
+  isBotGame = false;
   UI.hideOpponentSection();
   startSoloGame();
+});
+
+document.getElementById('btn-vs-bot').addEventListener('click', () => {
+  Sound.initAudio();
+  Sound.resumeAudio();
+  UI.showScreen('bot-select-screen');
 });
 
 document.getElementById('btn-multiplayer').addEventListener('click', () => {
   Sound.initAudio();
   Sound.resumeAudio();
   isMultiplayer = true;
+  isBotGame = false;
   initMultiplayer();
 });
 
@@ -46,6 +63,21 @@ document.getElementById('btn-highscores').addEventListener('click', () => {
 
 document.getElementById('btn-back-scores').addEventListener('click', () => {
   UI.showScreen('menu-screen');
+});
+
+// --- Bot select screen ---
+document.getElementById('btn-back-bot-select').addEventListener('click', () => {
+  UI.showScreen('menu-screen');
+});
+
+document.querySelectorAll('.bot-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const botKey = card.dataset.bot;
+    lastBotKey = botKey;
+    isMultiplayer = false;
+    isBotGame = true;
+    startBotGame(botKey);
+  });
 });
 
 // --- Game Over buttons ---
@@ -62,10 +94,17 @@ document.getElementById('btn-rematch').addEventListener('click', () => {
   document.getElementById('btn-rematch').disabled = true;
 });
 
+document.getElementById('btn-rematch-bot').addEventListener('click', () => {
+  UI.hideGameOver();
+  UI.hideHighScoreEntry();
+  startBotGame(lastBotKey);
+});
+
 document.getElementById('btn-back-to-menu').addEventListener('click', () => {
   UI.hideGameOver();
   UI.hideHighScoreEntry();
   if (game) game.stop();
+  stopBotGame();
   if (multiplayer) {
     multiplayer.leaveRoom();
     multiplayer.disconnect();
@@ -88,11 +127,11 @@ document.getElementById('btn-save-score').addEventListener('click', () => {
 function startSoloGame() {
   UI.showScreen('game-screen');
   UI.hideOpponentSection();
+  UI.setMyNameLabel('');
 
   const canvas = document.getElementById('game-canvas');
   const nextCanvas = document.getElementById('next-piece-canvas');
 
-  // Create a renderer instance for next piece
   renderer = new Renderer(canvas);
 
   game = new Game(canvas, {
@@ -100,7 +139,7 @@ function startSoloGame() {
     onScoreChange: (s) => UI.updateScore(s),
     onLinesChange: (l) => UI.updateLines(l),
     onLevelChange: (l) => UI.updateLevel(l),
-    onLineClear: (count, rows) => {},
+    onLineClear: () => {},
     onNextPiece: (type) => renderer.renderNextPiece(nextCanvas, type),
     onGameOver: (data) => handleGameOver(data),
     onBoardUpdate: () => {},
@@ -114,14 +153,120 @@ function handleGameOver(data) {
   setTimeout(() => {
     if (isMultiplayer) {
       multiplayer.sendTopOut();
-      // Wait for server to declare winner
+    } else if (isBotGame) {
+      // handled via handleBotGameOver
     } else {
-      UI.showGameOver(data, false);
+      UI.showGameOver(data, false, false);
       if (HighScores.isHighScore(data.score)) {
         UI.showHighScoreEntry();
       }
     }
-  }, 800); // Wait for game over particles
+  }, 800);
+}
+
+// --- Bot game ---
+function startBotGame(botKey) {
+  stopBotGame();
+  botGameOverHandled = false;
+
+  const personality = BOT_PERSONALITIES[botKey] || BOT_PERSONALITIES.rookie;
+  myName = document.getElementById('player-name')?.value.trim() || 'Player';
+
+  UI.showScreen('game-screen');
+  UI.showOpponentSection(personality.name);
+  UI.setMyNameLabel(myName);
+
+  const canvas = document.getElementById('game-canvas');
+  const nextCanvas = document.getElementById('next-piece-canvas');
+  renderer = new Renderer(canvas);
+
+  // Hidden canvas for bot rendering
+  const botCanvas = document.createElement('canvas');
+  botCanvas.width = 300;
+  botCanvas.height = 600;
+
+  UI.showCountdown(3, () => {
+    // Player game
+    game = new Game(canvas, {
+      level: selectedDifficulty,
+      onScoreChange: (s) => UI.updateScore(s),
+      onLinesChange: (l) => UI.updateLines(l),
+      onLevelChange: (l) => UI.updateLevel(l),
+      onLineClear: () => {},
+      onNextPiece: (type) => renderer.renderNextPiece(nextCanvas, type),
+      onGameOver: (data) => {
+        if (!botGameOverHandled) handleBotGameOver(false, data);
+      },
+      onBoardUpdate: () => {},
+      onGarbage: (lines) => {
+        if (botGame && botGame.state === 'playing') botGame.receiveGarbage(lines);
+      }
+    });
+
+    // Bot game (no keyboard)
+    botGame = new Game(botCanvas, {
+      level: selectedDifficulty,
+      noKeyboard: true,
+      onScoreChange: () => {},
+      onLinesChange: () => {},
+      onLevelChange: () => {},
+      onLineClear: () => {},
+      onNextPiece: () => {},
+      onGameOver: () => {
+        if (!botGameOverHandled) handleBotGameOver(true, game ? { score: game.score, lines: game.lines, level: game.level } : { score: 0, lines: 0, level: 1 });
+      },
+      onBoardUpdate: () => {},
+      onGarbage: (lines) => {
+        if (game && game.state === 'playing') game.receiveGarbage(lines);
+      }
+    });
+
+    game.start();
+    botGame.start();
+
+    botPlayer = new BotPlayer(botGame, botKey);
+    botPlayer.start();
+
+    // Sync bot board to opponent canvas at 10fps
+    const oppCanvas = document.getElementById('opponent-canvas');
+    botSyncInterval = setInterval(() => {
+      if (botGame && botGame.board) {
+        renderer.renderOpponentBoard(oppCanvas, botGame.board.getSnapshot());
+        UI.updateOpponentScore(botGame.score || 0);
+      }
+    }, 100);
+  });
+}
+
+function handleBotGameOver(playerWon, data) {
+  botGameOverHandled = true;
+  if (game) game.stop();
+  stopBotGame();
+
+  const gameData = data || { score: game?.score || 0, lines: game?.lines || 0, level: game?.level || 1 };
+
+  setTimeout(() => {
+    UI.showGameOver({ ...gameData, won: playerWon }, false, true);
+    if (playerWon && game && HighScores.isHighScore(gameData.score)) {
+      UI.showHighScoreEntry();
+    }
+  }, 500);
+}
+
+function stopBotGame() {
+  if (botPlayer) {
+    botPlayer.stop();
+    botPlayer = null;
+  }
+  if (botSyncInterval) {
+    clearInterval(botSyncInterval);
+    botSyncInterval = null;
+  }
+  if (botGame) {
+    botGame.stop();
+    botGame = null;
+  }
+  isBotGame = false;
 }
 
 // --- Multiplayer ---
@@ -132,7 +277,6 @@ async function initMultiplayer() {
   if (!multiplayer) {
     multiplayer = new MultiplayerClient();
     try {
-      // Load socket.io client script if not loaded
       if (typeof io === 'undefined') {
         await loadScript('/socket.io/socket.io.js');
       }
@@ -164,13 +308,11 @@ function setupMultiplayerCallbacks() {
   });
 
   multiplayer.on('roomJoined', (data) => {
-    // Show room info panel for the joining player too
     if (multiplayer.roomCode) {
       UI.showRoomInfo(multiplayer.roomCode);
     }
     UI.updatePlayersList(data.players, multiplayer.id);
 
-    // Find opponent name
     const opponent = data.players.find(p => p.id !== multiplayer.id);
     if (opponent) {
       opponentName = opponent.name;
@@ -242,9 +384,8 @@ function setupMultiplayerCallbacks() {
         lines: game?.lines || 0,
         level: game?.level || 1,
         won
-      }, true);
+      }, true, false);
 
-      // Save high score even in multiplayer
       if (game && HighScores.isHighScore(game.score)) {
         UI.showHighScoreEntry();
       }
@@ -257,7 +398,6 @@ function setupMultiplayerCallbacks() {
 
   multiplayer.on('rematchRequested', (data) => {
     UI.showToast(`${data.name} wants a rematch! Click REMATCH to accept.`, 5000);
-    // If game over overlay is hidden (opponent requested first), show it
     const overlay = document.getElementById('overlay-gameover');
     if (overlay.classList.contains('hidden') && game) {
       UI.showGameOver({
@@ -265,7 +405,7 @@ function setupMultiplayerCallbacks() {
         lines: game.lines,
         level: game.level,
         won: true
-      }, true);
+      }, true, false);
     }
   });
 }
@@ -281,18 +421,15 @@ function startMultiplayerGame() {
     onScoreChange: (s) => UI.updateScore(s),
     onLinesChange: (l) => UI.updateLines(l),
     onLevelChange: (l) => UI.updateLevel(l),
-    onLineClear: (count, rows) => {},
+    onLineClear: () => {},
     onNextPiece: (type) => renderer.renderNextPiece(nextCanvas, type),
     onGameOver: (data) => handleGameOver(data),
-    onBoardUpdate: (board, score, lines, level) => {
-      // Sent via sync interval, not every update
-    },
+    onBoardUpdate: () => {},
     onGarbage: (lines) => {
       multiplayer.sendGarbage(lines);
     }
   });
 
-  // Start state sync
   multiplayer.startSync(() => {
     if (!game || game.state === 'idle') return null;
     return {

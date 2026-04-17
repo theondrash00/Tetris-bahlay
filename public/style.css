@@ -622,6 +622,93 @@ body {
   pointer-events: none;
 }
 
+/* Bot Select Screen */
+.bot-select-container {
+  text-align: center;
+  max-width: 560px;
+}
+
+.bot-select-container h2 {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-primary);
+  margin-bottom: 1.5rem;
+}
+
+.bot-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.bot-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bot-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 12px rgba(154, 196, 52, 0.2);
+}
+
+.bot-card:active {
+  box-shadow: 0 0 20px rgba(154, 196, 52, 0.35);
+}
+
+.bot-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.bot-card-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.bot-difficulty-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.bot-difficulty-badge.easy {
+  background: var(--dk-green);
+  color: var(--dk-black);
+}
+
+.bot-difficulty-badge.medium {
+  background: var(--dk-grey);
+  color: var(--dk-black);
+}
+
+.bot-difficulty-badge.hard {
+  background: var(--dk-orange);
+  color: var(--dk-black);
+}
+
+.bot-difficulty-badge.expert {
+  background: #e03030;
+  color: #ffffff;
+}
+
+.bot-card-desc {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
 /* Hidden utility */
 .hidden {
   display: none !important;

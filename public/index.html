@@ -15,7 +15,8 @@
         <h1 class="game-title">TETRIS</h1>
         <div class="menu-buttons">
           <button id="btn-solo" class="btn btn-primary">SOLO PLAY</button>
-          <button id="btn-multiplayer" class="btn btn-secondary">MULTIPLAYER</button>
+          <button id="btn-vs-bot" class="btn btn-secondary">VS BOT</button>
+          <button id="btn-multiplayer" class="btn btn-outline">MULTIPLAYER</button>
           <button id="btn-highscores" class="btn btn-outline">HIGH SCORES</button>
         </div>
         <div class="difficulty-select">
@@ -48,6 +49,44 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Bot Select Screen -->
+  <div id="bot-select-screen" class="screen">
+    <div class="bot-select-container">
+      <h2>SELECT OPPONENT</h2>
+      <div class="bot-cards-grid">
+        <div class="bot-card" data-bot="rookie">
+          <div class="bot-card-header">
+            <span class="bot-card-name">Rookie</span>
+            <span class="bot-difficulty-badge easy">EASY</span>
+          </div>
+          <p class="bot-card-desc">Just learning the ropes. Makes plenty of mistakes.</p>
+        </div>
+        <div class="bot-card" data-bot="cleaner">
+          <div class="bot-card-header">
+            <span class="bot-card-name">Cleaner</span>
+            <span class="bot-difficulty-badge medium">MEDIUM</span>
+          </div>
+          <p class="bot-card-desc">Methodical and tidy. Loves a flat board.</p>
+        </div>
+        <div class="bot-card" data-bot="aggressor">
+          <div class="bot-card-header">
+            <span class="bot-card-name">Aggressor</span>
+            <span class="bot-difficulty-badge hard">HARD</span>
+          </div>
+          <p class="bot-card-desc">Sends garbage non-stop. Height means nothing.</p>
+        </div>
+        <div class="bot-card" data-bot="pro">
+          <div class="bot-card-header">
+            <span class="bot-card-name">Pro</span>
+            <span class="bot-difficulty-badge expert">EXPERT</span>
+          </div>
+          <p class="bot-card-desc">Near-perfect play. Good luck.</p>
+        </div>
+      </div>
+      <button id="btn-back-bot-select" class="btn btn-outline">BACK</button>
     </div>
   </div>
 
@@ -180,6 +219,7 @@
       <div class="gameover-buttons">
         <button id="btn-play-again" class="btn btn-primary">PLAY AGAIN</button>
         <button id="btn-rematch" class="btn btn-secondary hidden">REMATCH</button>
+        <button id="btn-rematch-bot" class="btn btn-secondary hidden">REMATCH</button>
         <button id="btn-back-to-menu" class="btn btn-outline">MENU</button>
       </div>
     </div>
