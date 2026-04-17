@@ -69,6 +69,47 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Controls legend — shared by menu + game panel */
+.controls-legend label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  align-items: center;
+}
+
+.key {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--dk-black);
+  background: var(--dk-green);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+.key-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* Menu variant: centered, slightly more spacing */
+.menu-controls {
+  margin-top: 1.5rem;
+  text-align: left;
+  display: inline-block;
+}
+
 /* Buttons */
 .btn {
   padding: 0.8rem 2rem;
