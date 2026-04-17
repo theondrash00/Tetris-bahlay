@@ -56,14 +56,10 @@ document.getElementById('btn-play-again').addEventListener('click', () => {
 });
 
 document.getElementById('btn-rematch').addEventListener('click', () => {
-  UI.hideGameOver();
-  UI.hideHighScoreEntry();
-  // Re-enter the lobby with same connection — server will reset room state
-  if (multiplayer) {
-    multiplayer.leaveRoom();
-  }
-  UI.showScreen('lobby-screen');
-  UI.hideRoomInfo();
+  if (!multiplayer) return;
+  multiplayer.sendRematch();
+  UI.showToast('Rematch requested — waiting for opponent...');
+  document.getElementById('btn-rematch').disabled = true;
 });
 
 document.getElementById('btn-back-to-menu').addEventListener('click', () => {
@@ -187,6 +183,9 @@ function setupMultiplayerCallbacks() {
 
   multiplayer.on('countdown', (data) => {
     if (data.seconds === 3) {
+      UI.hideGameOver();
+      UI.hideHighScoreEntry();
+      document.getElementById('btn-rematch').disabled = false;
       UI.showScreen('game-screen');
       UI.showOpponentSection(opponentName);
       UI.setMyNameLabel(myName);
@@ -254,6 +253,20 @@ function setupMultiplayerCallbacks() {
 
   multiplayer.on('opponentDisconnected', () => {
     UI.showToast('Opponent disconnected');
+  });
+
+  multiplayer.on('rematchRequested', (data) => {
+    UI.showToast(`${data.name} wants a rematch! Click REMATCH to accept.`, 5000);
+    // If game over overlay is hidden (opponent requested first), show it
+    const overlay = document.getElementById('overlay-gameover');
+    if (overlay.classList.contains('hidden') && game) {
+      UI.showGameOver({
+        score: game.score,
+        lines: game.lines,
+        level: game.level,
+        won: true
+      }, true);
+    }
   });
 }
 

@@ -160,12 +160,47 @@ io.on('connection', (socket) => {
 
     const winner = room.players.find(p => p.alive);
     room.state = 'finished';
+    room.rematchRequests = [];
 
     io.to(currentRoom).emit('game:over', {
       winnerId: winner ? winner.id : null,
       winnerName: winner ? winner.name : null,
       reason: 'topout'
     });
+  });
+
+  socket.on('game:rematch', () => {
+    if (!currentRoom) return;
+    const room = rooms.get(currentRoom);
+    if (!room || room.state !== 'finished') return;
+
+    if (!room.rematchRequests) room.rematchRequests = [];
+    if (room.rematchRequests.includes(socket.id)) return;
+
+    room.rematchRequests.push(socket.id);
+
+    // Notify opponent that this player wants a rematch
+    socket.to(currentRoom).emit('rematch:requested', {
+      name: room.players.find(p => p.id === socket.id)?.name
+    });
+
+    // Both players requested — start countdown
+    if (room.rematchRequests.length === 2) {
+      room.state = 'countdown';
+      room.rematchRequests = [];
+      room.players.forEach(p => { p.alive = true; p.ready = false; });
+
+      let count = 3;
+      const interval = setInterval(() => {
+        io.to(currentRoom).emit('game:countdown', { seconds: count });
+        count--;
+        if (count < 0) {
+          clearInterval(interval);
+          room.state = 'playing';
+          io.to(currentRoom).emit('game:start');
+        }
+      }, 1000);
+    }
   });
 
   socket.on('disconnect', () => {

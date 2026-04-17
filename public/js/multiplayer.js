@@ -88,6 +88,10 @@ export class MultiplayerClient {
     this.socket.emit('game:topout');
   }
 
+  sendRematch() {
+    this.socket.emit('game:rematch');
+  }
+
   // Callbacks
   on(event, callback) {
     this.callbacks[event] = callback;
@@ -132,6 +136,10 @@ export class MultiplayerClient {
     this.socket.on('opponent:disconnected', () => {
       this.stopSync();
       this.callbacks.opponentDisconnected?.();
+    });
+
+    this.socket.on('rematch:requested', (data) => {
+      this.callbacks.rematchRequested?.(data);
     });
   }
 }
