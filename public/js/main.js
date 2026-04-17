@@ -61,6 +61,14 @@ document.getElementById('btn-highscores').addEventListener('click', () => {
   UI.showScreen('highscores-screen');
 });
 
+document.getElementById('btn-whats-new').addEventListener('click', () => {
+  UI.showScreen('whats-new-screen');
+});
+
+document.getElementById('btn-back-whats-new').addEventListener('click', () => {
+  UI.showScreen('menu-screen');
+});
+
 document.getElementById('btn-back-scores').addEventListener('click', () => {
   UI.showScreen('menu-screen');
 });
