@@ -103,11 +103,48 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* Menu variant: centered, slightly more spacing */
-.menu-controls {
-  margin-top: 1.5rem;
-  text-align: left;
-  display: inline-block;
+/* Menu two-column layout: main content + sidebar */
+.menu-layout {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.menu-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar-controls {
+  border-left: 2px solid var(--border-color);
+  padding-left: 2rem;
+}
+
+.sidebar-controls label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 700px) {
+  .menu-layout {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .menu-sidebar {
+    align-items: center;
+  }
+
+  .sidebar-controls {
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    padding-left: 0;
+    padding-top: 1.5rem;
+  }
 }
 
 /* Buttons */

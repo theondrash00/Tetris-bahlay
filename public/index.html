@@ -10,25 +10,15 @@
 
   <!-- Menu Screen -->
   <div id="menu-screen" class="screen active">
-    <div class="menu-container">
-      <h1 class="game-title">TETRIS</h1>
-      <div class="menu-buttons">
-        <button id="btn-solo" class="btn btn-primary">SOLO PLAY</button>
-        <button id="btn-multiplayer" class="btn btn-secondary">MULTIPLAYER</button>
-        <button id="btn-highscores" class="btn btn-outline">HIGH SCORES</button>
-      </div>
-      <div class="controls-legend menu-controls">
-        <label>CONTROLS</label>
-        <div class="controls-grid">
-          <span class="key">← →</span><span class="key-desc">Move</span>
-          <span class="key">↑</span><span class="key-desc">Rotate CW</span>
-          <span class="key">Z</span><span class="key-desc">Rotate CCW</span>
-          <span class="key">↓</span><span class="key-desc">Soft drop</span>
-          <span class="key">Space</span><span class="key-desc">Hard drop</span>
+    <div class="menu-layout">
+      <div class="menu-container">
+        <h1 class="game-title">TETRIS</h1>
+        <div class="menu-buttons">
+          <button id="btn-solo" class="btn btn-primary">SOLO PLAY</button>
+          <button id="btn-multiplayer" class="btn btn-secondary">MULTIPLAYER</button>
+          <button id="btn-highscores" class="btn btn-outline">HIGH SCORES</button>
         </div>
-      </div>
-
-      <div class="difficulty-select">
+        <div class="difficulty-select">
         <label>STARTING LEVEL</label>
         <div class="difficulty-buttons" id="difficulty-buttons">
           <button class="diff-btn active" data-level="1">1</button>
@@ -41,6 +31,21 @@
           <button class="diff-btn" data-level="8">8</button>
           <button class="diff-btn" data-level="9">9</button>
           <button class="diff-btn" data-level="10">10</button>
+        </div>
+      </div>
+      </div>
+
+      <!-- Sidebar: controls -->
+      <div class="menu-sidebar">
+        <div class="sidebar-controls">
+          <label>CONTROLS</label>
+          <div class="controls-grid">
+            <span class="key">← →</span><span class="key-desc">Move</span>
+            <span class="key">↑</span><span class="key-desc">Rotate CW</span>
+            <span class="key">Z</span><span class="key-desc">Rotate CCW</span>
+            <span class="key">↓</span><span class="key-desc">Soft drop</span>
+            <span class="key">Space</span><span class="key-desc">Hard drop</span>
+          </div>
         </div>
       </div>
     </div>
