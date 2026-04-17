@@ -1,7 +1,13 @@
 # Tetris with Online Multiplayer — Implementation Plan
 
 ## Context
-Building a modern Tetris game from scratch with online multiplayer using the DraftKings color palette. The project is a new, empty directory. The game will feature classic Tetris gameplay, player-selectable difficulty, synthesized sound effects, particle animations, high score persistence, and WebSocket-based multiplayer with room codes and garbage line attacks.
+Built a modern Tetris game from scratch with online multiplayer using the DraftKings color palette. Solo play is confirmed working. Multiplayer is confirmed working after a join bug fix. Project is deployed on GitHub and on Render.
+
+---
+
+## Status: COMPLETE ✅
+
+All phases built, tested, and deployed.
 
 ---
 
@@ -9,6 +15,8 @@ Building a modern Tetris game from scratch with online multiplayer using the Dra
 - **Frontend:** Vanilla JS (ES Modules), Canvas rendering, Web Audio API
 - **Backend:** Node.js + Express + Socket.io
 - **No bundler** — native ES module imports via `<script type="module">`
+- **Node.js location (this machine):** `C:\node-v24.15.0-win-x64\node.exe`
+- **Run server:** `"C:/node-v24.15.0-win-x64/node.exe" server.js` or add Node to PATH first
 
 ## DraftKings Palette
 | Color | Hex | Usage |
@@ -23,8 +31,10 @@ Building a modern Tetris game from scratch with online multiplayer using the Dra
 ## File Structure
 ```
 Tetris-bahlay/
+├── .gitignore
 ├── package.json              # express + socket.io deps
 ├── server.js                 # Express static server + Socket.io room/relay logic
+├── vast-gliding-island.md    # This file
 ├── public/
 │   ├── index.html            # Single page with layered screens (menu, lobby, game, scores)
 │   ├── style.css             # Full styling with DK palette as CSS vars
@@ -76,37 +86,6 @@ Tetris-bahlay/
 
 ---
 
-## Build Phases
-
-### Phase 1: Solo Tetris Core
-1. **Scaffold** — `package.json`, `server.js` (Express static), `index.html` with canvas
-2. **Constants + Piece** — Tetromino shapes, SRS kicks, 7-bag randomizer
-3. **Board** — Grid, collision, line clearing
-4. **Renderer** — Canvas drawing: grid, cells (beveled 3D look), ghost piece
-5. **Game loop** — Gravity, input with DAS, locking, scoring, level progression
-
-### Phase 2: Polish
-6. **Sound** — Web Audio synthesized effects (move, rotate, drop, clear, game over)
-7. **Particles** — Line clear bursts (green/orange), lock sparkles, Tetris screen shake
-8. **UI + Styling** — Menu screens, DraftKings themed CSS, game layout
-9. **High scores** — localStorage top 10, name entry on game over
-10. **Difficulty** — Starting level selector (1-10), affects initial gravity speed
-
-### Phase 3: Multiplayer
-11. **Server rooms** — Socket.io room creation/joining/ready/countdown
-12. **Client multiplayer** — Lobby UI, socket connection, room management
-13. **State sync** — Board snapshot broadcast, opponent mini-canvas rendering
-14. **Garbage lines** — Send on clear, receive and insert from below
-15. **Win/loss** — Top-out detection, server declares winner, result overlay
-16. **Disconnection** — Graceful handling, remaining player wins
-
-### Phase 4: Final Polish
-17. Tune particle effects, animations, screen shake
-18. Audio volume balancing
-19. Cross-browser testing (Chrome, Firefox, Edge)
-
----
-
 ## Scoring
 - Lines cleared: 100 / 300 / 500 / 800 (1/2/3/4 lines) x current level
 - Soft drop: +1 per row
@@ -123,7 +102,24 @@ Tetris-bahlay/
 
 ---
 
-## Verification
-1. **Solo play:** Open `http://localhost:3000`, play a full game, verify pieces rotate/kick correctly, lines clear with particles, score updates, ghost piece visible, sounds play, high score saves
-2. **Multiplayer:** Open two browser tabs, create room in tab 1, join with code in tab 2, both ready, verify countdown syncs, opponent board updates in real-time, garbage lines appear when opponent clears, winner declared on top-out
-3. **Edge cases:** Rapid disconnect during game, simultaneous top-outs, room cleanup after both leave
+## Known Bugs Fixed
+- **Multiplayer "Room is Full" on join:** The joining client wasn't storing the room code before receiving the `room:joined` event, causing the UI to not show the room panel. Fix: `multiplayer.js` now sets `this.roomCode` in `joinRoom()` before emitting the socket event. `main.js` `roomJoined` callback now calls `UI.showRoomInfo()` for the joiner too.
+
+---
+
+## Deployment
+
+- **GitHub:** https://github.com/theondrash00/Tetris-bahlay
+- **Render (hosted):** Connected to GitHub repo, auto-deploys on push to `main`
+- **Local:** `"C:/node-v24.15.0-win-x64/node.exe" server.js` -> http://localhost:3000
+
+## New Machine Setup
+```bash
+git clone https://github.com/theondrash00/Tetris-bahlay.git
+cd Tetris-bahlay
+npm install
+npm start
+```
+Requires Node.js installed. Install from https://nodejs.org (LTS).
+
+Note: High scores are stored in browser localStorage — they do not persist across machines.
