@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
@@ -8,6 +9,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
+
+// Gzip compress all responses (JS/CSS/HTML shrink ~75%)
+app.use(compression());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));

@@ -195,6 +195,18 @@ body {
   color: var(--accent-primary);
 }
 
+/* Shared centered panel container (lobby / highscores / whats-new / bot-select) */
+.panel-container {
+  text-align: center;
+  width: 100%;
+}
+.panel-container h2 {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-primary);
+  margin-bottom: 1.5rem;
+}
+
 /* Difficulty */
 .difficulty-select {
   margin-top: 1rem;
@@ -284,17 +296,7 @@ body {
 }
 
 /* Lobby */
-.lobby-container {
-  text-align: center;
-  max-width: 400px;
-}
-
-.lobby-container h2 {
-  font-size: 2rem;
-  letter-spacing: 0.2em;
-  color: var(--accent-primary);
-  margin-bottom: 1.5rem;
-}
+.lobby-container { max-width: 400px; }
 
 .lobby-section {
   margin-bottom: 1rem;
@@ -504,17 +506,7 @@ body {
 }
 
 /* High Scores */
-.highscores-container {
-  text-align: center;
-  max-width: 500px;
-}
-
-.highscores-container h2 {
-  font-size: 2rem;
-  letter-spacing: 0.2em;
-  color: var(--accent-primary);
-  margin-bottom: 1.5rem;
-}
+.highscores-container { max-width: 500px; }
 
 .highscores-table {
   width: 100%;
@@ -669,18 +661,7 @@ body {
 }
 
 /* What's New screen */
-.whats-new-container {
-  text-align: center;
-  max-width: 480px;
-  width: 100%;
-}
-
-.whats-new-container h2 {
-  font-size: 2rem;
-  letter-spacing: 0.2em;
-  color: var(--accent-primary);
-  margin-bottom: 1.5rem;
-}
+.whats-new-container { max-width: 480px; }
 
 .changelog-list {
   display: flex;
@@ -737,17 +718,7 @@ body {
 }
 
 /* Bot Select Screen */
-.bot-select-container {
-  text-align: center;
-  max-width: 560px;
-}
-
-.bot-select-container h2 {
-  font-size: 2rem;
-  letter-spacing: 0.2em;
-  color: var(--accent-primary);
-  margin-bottom: 1.5rem;
-}
+.bot-select-container { max-width: 560px; }
 
 .bot-cards-grid {
   display: grid;

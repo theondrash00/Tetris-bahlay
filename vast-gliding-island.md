@@ -111,6 +111,13 @@ Tetris-bahlay/
   - **Game screen:** left panel below SCORE / LEVEL / LINES
 - Controls legend intentionally removed from the right panel (kept clean for NEXT piece + opponent board)
 
+## Code Refactor (post-launch)
+- **main.js split** — 523-line entry point split into 3 files: `main.js` (wiring only, ~140 lines), `gameController.js` (all game start/stop/teardown logic), `multiplayerCallbacks.js` (all socket event handlers)
+- **Shared `createGame()` factory** — `startSoloGame`, `startBotGame`, `startMultiplayerGame` unified; shared callbacks wired once, mode-specific overrides passed as deltas
+- **CSS consolidation** — `.panel-container` base class extracts shared `text-align/h2` rules duplicated across 4 screen containers (~20 lines saved)
+- **Gzip compression** — `compression` npm package added to server; all JS/CSS/HTML compressed on the wire (~75% size reduction, 128KB → ~30KB transferred)
+- **File structure** now: `main.js` (event wiring) → `gameController.js` (game modes) → `multiplayerCallbacks.js` (socket events)
+
 ## Difficulty Selector UX (post-launch)
 - **Color-coded level buttons** — 1–3 green, 4–6 yellow, 7–8 orange, 9–10 red; active button uses tier color
 - **Dynamic hint line** below selector updates on each click: speed label + score multiplier in matching color (e.g. *"Fast · 5× score"*)
