@@ -183,6 +183,14 @@ body {
   min-width: 240px;
 }
 
+.btn:disabled {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #555;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .btn-primary {
   background: var(--accent-primary);
   color: var(--dk-black);
