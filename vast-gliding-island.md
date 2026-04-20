@@ -39,17 +39,20 @@ Tetris-bahlay/
 │   ├── index.html            # Single page with layered screens (menu, lobby, game, scores)
 │   ├── style.css             # Full styling with DK palette as CSS vars
 │   └── js/
-│       ├── main.js           # Entry point: screen orchestration, event wiring
-│       ├── constants.js      # Tetrominoes (SRS), colors, speeds, keys, scoring tables
-│       ├── board.js          # Grid state, collision, line clearing, garbage insertion
-│       ├── piece.js          # Piece position/rotation, SRS wall kicks, 7-bag randomizer
-│       ├── game.js           # Game loop, input (DAS), scoring, state machine
-│       ├── renderer.js       # Canvas drawing: board, pieces, ghost, beveled cells
-│       ├── particles.js      # Particle system for line clear/lock/game-over effects
-│       ├── sound.js          # Web Audio API synthesized SFX (no external files)
-│       ├── ui.js             # DOM UI: screen toggling, score display, overlays, toasts
-│       ├── highscores.js     # localStorage CRUD for top 10 scores
-│       └── multiplayer.js    # Socket.io client: room management, state sync, garbage relay
+│       ├── main.js                 # Entry point: button wiring only
+│       ├── gameController.js       # All game mode logic (solo/bot/multiplayer start/stop/teardown)
+│       ├── multiplayerCallbacks.js # All Socket.io event handlers
+│       ├── constants.js            # Tetrominoes (SRS), colors, speeds, keys, scoring, timing constants
+│       ├── board.js                # Grid state, collision, line clearing, garbage insertion
+│       ├── piece.js                # Piece position/rotation, SRS wall kicks, 7-bag randomizer
+│       ├── game.js                 # Game loop, input (DAS), scoring, state machine
+│       ├── bot.js                  # BotPlayer AI + BOT_PERSONALITIES (4 difficulty bots)
+│       ├── renderer.js             # Canvas drawing: board, pieces, ghost, beveled cells
+│       ├── particles.js            # Particle system for line clear/lock/game-over effects
+│       ├── sound.js                # Web Audio API synthesized SFX (no external files)
+│       ├── ui.js                   # DOM UI: screen toggling, score display, overlays, toasts
+│       ├── highscores.js           # localStorage CRUD for top 10 scores
+│       └── multiplayer.js          # Socket.io client: room management, state sync, garbage relay
 ```
 
 ---
@@ -110,6 +113,12 @@ Tetris-bahlay/
   - **Menu screen:** right sidebar separated by a vertical border line, next to the title/buttons
   - **Game screen:** left panel below SCORE / LEVEL / LINES
 - Controls legend intentionally removed from the right panel (kept clean for NEXT piece + opponent board)
+
+## Clean Code Pass (post-launch)
+- **Dead code removed** — `lastSyncData` (multiplayer.js), `onBoardUpdate` callback + 2 expensive `getSnapshot()` calls (game.js), no-op `onBoardUpdate: () => {}` from all 3 game constructors
+- **Bot functions split** — `_findBestPlacement` (46 lines) extracted into `_pieceAtRotation()` + `_simulatePlacement()`; `_executeMove` split into `_rotatePiece()` + `_translatePiece()`; removed single-letter `g` alias
+- **Magic numbers named** — 6 new constants in constants.js: `FLASH_DURATION`, `SOFT_DROP_INTERVAL`, `COUNTDOWN_GO_DURATION`, `PARTICLE_GRAVITY`, `PARTICLE_STAGGER_MS`, `TETRIS_SHAKE_DURATION`
+- **Error handling** — clipboard copy shows toast on failure; `localStorage.setItem` wrapped in try/catch for quota errors
 
 ## Code Refactor (post-launch)
 - **main.js split** — 523-line entry point split into 3 files: `main.js` (wiring only, ~140 lines), `gameController.js` (all game start/stop/teardown logic), `multiplayerCallbacks.js` (all socket event handlers)
