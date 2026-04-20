@@ -127,6 +127,9 @@ Tetris-bahlay/
 - **Double import fixed** in `gameController.js` — `showTauntLegend/hideTauntLegend/showOpponentTaunt` were imported twice (once via `* as UI`, once as named imports); now destructured from `UI`
 - **`startCountdown(roomCode)`** extracted in `server.js` — eliminates duplicate 12-line `setInterval` block that existed in both ready flow and rematch flow
 
+## UI / CSS Notes
+- **`.btn:disabled`** — global disabled state: dark grey background (`#2a2a2a`), grey border (`#444`), dim text (`#555`), `cursor: not-allowed`. Applies to any `.btn` with the `disabled` attribute.
+
 ## Code Refactor (post-launch)
 - **main.js split** — 523-line entry point split into 3 files: `main.js` (wiring only, ~140 lines), `gameController.js` (all game start/stop/teardown logic), `multiplayerCallbacks.js` (all socket event handlers)
 - **Shared `createGame()` factory** — `startSoloGame`, `startBotGame`, `startMultiplayerGame` unified; shared callbacks wired once, mode-specific overrides passed as deltas
@@ -186,7 +189,7 @@ Tetris-bahlay/
 
 ## Multiplayer UX Improvements (post-launch)
 - **Copy room code button** — `⧉` icon next to room code in lobby, copies to clipboard, shows toast
-- **Invite link** — `🔗` icon next to room code copies a shareable URL (`?join=XXXX`); opening the link auto-navigates to lobby with room code pre-filled — P2 only needs to enter their name and click Join; Back to Menu cleans up the query param
+- **Invite link** — `🔗` icon next to room code copies a shareable URL (`?join=XXXX`); opening the link auto-navigates to lobby with room code pre-filled — P2 only needs to enter their name and click Join; Back to Menu cleans up the query param; Create Room button is disabled (greyed out, `not-allowed` cursor) when arriving via invite link
 - **Player name above board** — your name shown above the game canvas in green during multiplayer (from lobby name input)
 - **Rematch flow (Option B):**
   - Player A clicks REMATCH → button disables, toast shown, `game:rematch` sent to server
