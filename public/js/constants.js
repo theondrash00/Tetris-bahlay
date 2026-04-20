@@ -131,6 +131,25 @@ export const PIECE_TYPES = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 // Multiplayer state sync rate
 export const SYNC_RATE = 100; // ms between state broadcasts
 
+// Board palette encoding: maps palette index (char code - 48) → hex color
+// Index 0 = empty, 1-7 = piece colors, 8 = garbage
+export const BOARD_PALETTE = [
+  null,        // 0 = empty
+  '#00e5ff',   // 1 = I
+  '#ffd600',   // 2 = O
+  '#aa00ff',   // 3 = T
+  '#76ff03',   // 4 = S
+  '#ff1744',   // 5 = Z
+  '#2979ff',   // 6 = J
+  '#ff9100',   // 7 = L
+  '#888888',   // 8 = garbage
+];
+
+// Reverse lookup: hex color → palette index char
+export const BOARD_PALETTE_INDEX = Object.fromEntries(
+  BOARD_PALETTE.map((color, i) => [color, String.fromCharCode(48 + i)])
+);
+
 // Game timing
 export const FLASH_DURATION = 400;      // ms for line-clear flash animation
 export const SOFT_DROP_INTERVAL = 50;   // ms between soft-drop ticks

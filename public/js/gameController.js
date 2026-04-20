@@ -190,7 +190,7 @@ export function startMultiplayerGame() {
   state.multiplayer.startSync(() => {
     if (!state.game || state.game.state === 'idle') return null;
     return {
-      board: state.game.board.getSnapshot(),
+      board: state.game.board.getEncodedSnapshot(),
       score: state.game.score,
       lines: state.game.lines,
       level: state.game.level

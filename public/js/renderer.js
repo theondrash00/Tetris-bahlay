@@ -1,4 +1,4 @@
-import { COLS, ROWS, CELL_SIZE, TETROMINOES } from './constants.js';
+import { COLS, ROWS, CELL_SIZE, TETROMINOES, BOARD_PALETTE } from './constants.js';
 
 export class Renderer {
   constructor(canvas) {
@@ -193,11 +193,18 @@ export class Renderer {
     const cellW = canvas.width / COLS;
     const cellH = canvas.height / ROWS;
 
+    const encoded = typeof boardSnapshot === 'string';
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
-        const cell = boardSnapshot[r]?.[c];
-        if (cell) {
-          ctx.fillStyle = cell;
+        let color;
+        if (encoded) {
+          const idx = boardSnapshot.charCodeAt(r * COLS + c) - 48;
+          color = idx > 0 ? BOARD_PALETTE[idx] : null;
+        } else {
+          color = boardSnapshot[r]?.[c];
+        }
+        if (color) {
+          ctx.fillStyle = color;
           ctx.fillRect(c * cellW, r * cellH, cellW - 0.5, cellH - 0.5);
         }
       }

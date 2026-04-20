@@ -62,11 +62,13 @@ export class MultiplayerClient {
   // Game state sync
   startSync(getStateCallback) {
     this.stopSync();
+    let lastBoard = null;
     this.syncInterval = setInterval(() => {
       const state = getStateCallback();
-      if (state) {
-        this.socket.emit('game:state', state);
-      }
+      if (!state) return;
+      if (state.board === lastBoard) return;
+      lastBoard = state.board;
+      this.socket.emit('game:state', state);
     }, SYNC_RATE);
   }
 

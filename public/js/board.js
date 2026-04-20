@@ -1,4 +1,4 @@
-import { COLS, ROWS } from './constants.js';
+import { COLS, ROWS, BOARD_PALETTE_INDEX } from './constants.js';
 
 export class Board {
   constructor(rows = ROWS, cols = COLS) {
@@ -89,5 +89,16 @@ export class Board {
 
   getSnapshot() {
     return this.grid.map(row => [...row]);
+  }
+
+  getEncodedSnapshot() {
+    let s = '';
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.cols; c++) {
+        const cell = this.grid[r][c];
+        s += cell ? (BOARD_PALETTE_INDEX[cell] ?? '8') : '0';
+      }
+    }
+    return s;
   }
 }
