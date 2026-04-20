@@ -128,6 +128,13 @@ Tetris-bahlay/
 - **Gzip compression** — `compression` npm package added to server; all JS/CSS/HTML compressed on the wire (~75% size reduction, 128KB → ~30KB transferred)
 - **File structure** now: `main.js` (event wiring) → `gameController.js` (game modes) → `multiplayerCallbacks.js` (socket events)
 
+## Menu Button Colors (post-launch)
+- **SOLO PLAY** — green fill (`btn-primary`, `#9ac434`)
+- **VS BOT** — orange fill (`btn-secondary`, `#f46c22`)
+- **MULTIPLAYER** — blue outline (`btn-blue`, `#2979ff`) with blue glow on hover
+- **HIGH SCORES** — grey outline (`btn-outline`)
+- **WHAT'S NEW** — dimmed outline (`btn-whats-new`)
+
 ## Difficulty Selector UX (post-launch)
 - **Color-coded level buttons** — 1–3 green, 4–6 yellow, 7–8 orange, 9–10 red; active button uses tier color
 - **Dynamic hint line** below selector updates on each click: speed label + score multiplier in matching color (e.g. *"Fast · 5× score"*)
