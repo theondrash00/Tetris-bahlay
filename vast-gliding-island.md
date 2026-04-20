@@ -121,6 +121,12 @@ Tetris-bahlay/
 - **Magic numbers named** — 6 new constants in constants.js: `FLASH_DURATION`, `SOFT_DROP_INTERVAL`, `COUNTDOWN_GO_DURATION`, `PARTICLE_GRAVITY`, `PARTICLE_STAGGER_MS`, `TETRIS_SHAKE_DURATION`
 - **Error handling** — clipboard copy shows toast on failure; `localStorage.setItem` wrapped in try/catch for quota errors
 
+## Clean Code Pass 2 (post-launch)
+- **`ParticleSystem.getShakeOffset()`** removed — method was defined but never called anywhere
+- **`bag.peek()`** removed — method in 7-bag randomizer was never called anywhere
+- **Double import fixed** in `gameController.js` — `showTauntLegend/hideTauntLegend/showOpponentTaunt` were imported twice (once via `* as UI`, once as named imports); now destructured from `UI`
+- **`startCountdown(roomCode)`** extracted in `server.js` — eliminates duplicate 12-line `setInterval` block that existed in both ready flow and rematch flow
+
 ## Code Refactor (post-launch)
 - **main.js split** — 523-line entry point split into 3 files: `main.js` (wiring only, ~140 lines), `gameController.js` (all game start/stop/teardown logic), `multiplayerCallbacks.js` (all socket event handlers)
 - **Shared `createGame()` factory** — `startSoloGame`, `startBotGame`, `startMultiplayerGame` unified; shared callbacks wired once, mode-specific overrides passed as deltas
