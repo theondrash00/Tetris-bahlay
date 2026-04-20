@@ -11,7 +11,9 @@ export const BOT_PERSONALITIES = {
     thinkMin: 600,
     thinkMax: 900,
     errorRate: 0.30,
-    weights: { holes: 2, height: 0.5, bumpiness: 0.5, lines: 5 }
+    weights: { holes: 2, height: 0.5, bumpiness: 0.5, lines: 5 },
+    tauntChance: 0.04,
+    taunts: ['hi :)', 'oops', 'im trying', 'what just happened', 'almost!']
   },
   cleaner: {
     name: 'Cleaner',
@@ -21,7 +23,9 @@ export const BOT_PERSONALITIES = {
     thinkMin: 250,
     thinkMax: 400,
     errorRate: 0.10,
-    weights: { holes: 5, height: 1.5, bumpiness: 2, lines: 8 }
+    weights: { holes: 5, height: 1.5, bumpiness: 2, lines: 8 },
+    tauntChance: 0.05,
+    taunts: ['clean.', 'tidy.', 'nice board', 'smooth', 'no holes pls']
   },
   aggressor: {
     name: 'Aggressor',
@@ -31,7 +35,9 @@ export const BOT_PERSONALITIES = {
     thinkMin: 150,
     thinkMax: 250,
     errorRate: 0.15,
-    weights: { holes: 3, height: 0.3, bumpiness: 0.5, lines: 12 }
+    weights: { holes: 3, height: 0.3, bumpiness: 0.5, lines: 12 },
+    tauntChance: 0.15,
+    taunts: ['take that 🔥', 'enjoy the garbage', 'too easy', 'GG already', 'Nooo!', '😂']
   },
   pro: {
     name: 'Pro',
@@ -41,14 +47,17 @@ export const BOT_PERSONALITIES = {
     thinkMin: 80,
     thinkMax: 150,
     errorRate: 0.03,
-    weights: { holes: 8, height: 2.5, bumpiness: 3, lines: 10 }
+    weights: { holes: 8, height: 2.5, bumpiness: 3, lines: 10 },
+    tauntChance: 0.05,
+    taunts: ['predictable', 'GG', '🤖', 'calculated', 'as expected']
   }
 };
 
 export class BotPlayer {
-  constructor(game, personalityKey) {
+  constructor(game, personalityKey, onTaunt = () => {}) {
     this.game = game;
     this.personality = BOT_PERSONALITIES[personalityKey] || BOT_PERSONALITIES.rookie;
+    this.onTaunt = onTaunt;
     this.running = false;
     this.thinkTimeout = null;
   }
@@ -91,7 +100,15 @@ export class BotPlayer {
       }
     }
 
+    this._maybeTaunt();
     this._scheduleThink();
+  }
+
+  _maybeTaunt() {
+    const { tauntChance, taunts } = this.personality;
+    if (taunts.length && Math.random() < tauntChance) {
+      this.onTaunt(taunts[Math.floor(Math.random() * taunts.length)]);
+    }
   }
 
   _findBestPlacement() {

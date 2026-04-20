@@ -155,7 +155,7 @@ export function startBotGame(botKey) {
     state.game.start();
     state.botGame.start();
 
-    state.botPlayer = new BotPlayer(state.botGame, botKey);
+    state.botPlayer = new BotPlayer(state.botGame, botKey, (msg) => showOpponentTaunt(msg));
     state.botPlayer.start();
 
     state.botSyncInterval = setInterval(() => {
