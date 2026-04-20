@@ -140,7 +140,9 @@ function loadScript(src) {
 document.getElementById('btn-copy-code').addEventListener('click', () => {
   const code = document.getElementById('room-code-value').textContent;
   if (!code) return;
-  navigator.clipboard.writeText(code).then(() => UI.showToast('Room code copied!'));
+  navigator.clipboard.writeText(code)
+    .then(() => UI.showToast('Room code copied!'))
+    .catch(() => UI.showToast('Failed to copy — try manually'));
 });
 
 document.getElementById('btn-create-room').addEventListener('click', () => {

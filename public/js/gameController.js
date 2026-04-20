@@ -1,6 +1,7 @@
 import { Game } from './game.js';
 import { Renderer } from './renderer.js';
 import { BotPlayer, BOT_PERSONALITIES } from './bot.js';
+import { COLS, ROWS, CELL_SIZE } from './constants.js';
 import * as UI from './ui.js';
 import * as HighScores from './highscores.js';
 
@@ -39,7 +40,6 @@ function createGame(canvas, overrides = {}) {
     onLevelChange: (l) => UI.updateLevel(l),
     onLineClear: () => {},
     onNextPiece: (type) => state.renderer.renderNextPiece(nextCanvas, type),
-    onBoardUpdate: () => {},
     onGameOver: () => {},
     onGarbage: () => {},
     ...overrides
@@ -114,8 +114,8 @@ export function startBotGame(botKey) {
   state.renderer = new Renderer(canvas);
 
   const botCanvas = document.createElement('canvas');
-  botCanvas.width = 300;
-  botCanvas.height = 600;
+  botCanvas.width = COLS * CELL_SIZE;
+  botCanvas.height = ROWS * CELL_SIZE;
 
   UI.showCountdown(3, () => {
     state.game = createGame(canvas, {
@@ -135,7 +135,6 @@ export function startBotGame(botKey) {
       onLevelChange: () => {},
       onLineClear: () => {},
       onNextPiece: () => {},
-      onBoardUpdate: () => {},
       onGameOver: () => {
         if (!state.botGameOverHandled) {
           const data = state.game

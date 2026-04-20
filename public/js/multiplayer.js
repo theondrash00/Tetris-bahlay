@@ -6,7 +6,6 @@ export class MultiplayerClient {
     this.roomCode = null;
     this.callbacks = {};
     this.syncInterval = null;
-    this.lastSyncData = null;
   }
 
   connect() {

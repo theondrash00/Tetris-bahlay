@@ -14,7 +14,11 @@ export function addHighScore(name, score, lines, level) {
   scores.push({ name, score, lines, level, date: Date.now() });
   scores.sort((a, b) => b.score - a.score);
   scores.splice(MAX_ENTRIES);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+  } catch {
+    // Storage quota exceeded — scores not saved
+  }
   return scores;
 }
 

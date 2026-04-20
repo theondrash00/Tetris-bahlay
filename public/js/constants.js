@@ -130,3 +130,13 @@ export const PIECE_TYPES = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 
 // Multiplayer state sync rate
 export const SYNC_RATE = 100; // ms between state broadcasts
+
+// Game timing
+export const FLASH_DURATION = 400;      // ms for line-clear flash animation
+export const SOFT_DROP_INTERVAL = 50;   // ms between soft-drop ticks
+export const COUNTDOWN_GO_DURATION = 600; // ms "GO!" stays on screen before game starts
+
+// Particles
+export const PARTICLE_GRAVITY = 0.12;       // vy added per update tick
+export const PARTICLE_STAGGER_MS = 30;      // ms delay per row in game-over effect
+export const TETRIS_SHAKE_DURATION = 300;   // ms screen shake on 4-line clear

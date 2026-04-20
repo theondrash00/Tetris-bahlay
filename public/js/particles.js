@@ -1,4 +1,4 @@
-import { COLS, CELL_SIZE } from './constants.js';
+import { COLS, CELL_SIZE, PARTICLE_GRAVITY, PARTICLE_STAGGER_MS, TETRIS_SHAKE_DURATION } from './constants.js';
 
 const POOL_SIZE = 500;
 const EFFECT_COLORS = ['#9ac434', '#f46c22', '#d8d8d8', '#ffffff'];
@@ -75,7 +75,7 @@ export class ParticleSystem {
 
     // Tetris (4 lines) — screen shake
     if (rows.length >= 4) {
-      this.shakeTimer = 300; // ms
+      this.shakeTimer = TETRIS_SHAKE_DURATION;
     }
   }
 
@@ -110,7 +110,7 @@ export class ParticleSystem {
               decayRange: [0.008, 0.015],
               colors: [board.grid[r][c], '#666666']
             });
-          }, r * 30);
+          }, r * PARTICLE_STAGGER_MS);
         }
       }
     }
@@ -149,7 +149,7 @@ export class ParticleSystem {
       const p = this.active[i];
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.12; // gravity
+      p.vy += PARTICLE_GRAVITY;
       p.life -= p.decay;
 
       if (p.life <= 0) {

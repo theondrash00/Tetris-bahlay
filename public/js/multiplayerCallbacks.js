@@ -2,6 +2,7 @@ import * as UI from './ui.js';
 import * as Sound from './sound.js';
 import * as HighScores from './highscores.js';
 import { state, startMultiplayerGame } from './gameController.js';
+import { COUNTDOWN_GO_DURATION } from './constants.js';
 
 function pulseCountdown(text, value, color = '') {
   text.textContent = value;
@@ -49,7 +50,7 @@ export function setupMultiplayerCallbacks() {
       overlay.classList.add('hidden');
       text.style.color = '';
       startMultiplayerGame();
-    }, 600);
+    }, COUNTDOWN_GO_DURATION);
   });
 
   mp.on('opponentState', (data) => {

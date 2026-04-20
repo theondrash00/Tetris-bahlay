@@ -75,13 +75,11 @@ export class BotPlayer {
 
   _thinkAndAct() {
     if (!this.running) return;
-    const g = this.game;
-    if (g.state !== 'playing' || !g.currentPiece) {
+    if (this.game.state !== 'playing' || !this.game.currentPiece) {
       this._scheduleThink();
       return;
     }
 
-    // Random error: pick a random move instead of best
     if (Math.random() < this.personality.errorRate) {
       this._executeRandomMove();
     } else {
@@ -89,7 +87,7 @@ export class BotPlayer {
       if (best) {
         this._executeMove(best.rotation, best.col);
       } else {
-        g.hardDrop();
+        this.game.hardDrop();
       }
     }
 
@@ -97,44 +95,17 @@ export class BotPlayer {
   }
 
   _findBestPlacement() {
-    const g = this.game;
-    const piece = g.currentPiece;
-    const board = g.board;
+    const { currentPiece: piece, board } = this.game;
     const rotationCount = piece.shape.length;
-
     let bestScore = -Infinity;
     let bestMove = null;
 
     for (let rot = 0; rot < rotationCount; rot++) {
-      const testPiece = piece.clone();
-      // Rotate to target rotation
-      const rotations = (rot - piece.rotation + rotationCount) % rotationCount;
-      for (let i = 0; i < rotations; i++) {
-        testPiece.rotation = (testPiece.rotation + 1) % rotationCount;
-      }
+      const testPiece = this._pieceAtRotation(piece, rot);
 
-      // Try every column
       for (let col = -2; col < COLS + 2; col++) {
-        const trial = testPiece.clone();
-        trial.col = col;
-
-        if (!board.canPlace(trial.getBlocks())) continue;
-
-        // Drop it down
-        while (trial.move(1, 0, board)) {/* drop */}
-
-        const blocks = trial.getBlocks();
-        if (blocks.length === 0) continue;
-        if (blocks.every(b => b.row < 0)) continue; // entirely above board
-
-        // Simulate locking
-        const simGrid = board.grid.map(r => [...r]);
-        for (const { row, col: c } of blocks) {
-          if (row >= 0 && row < ROWS) simGrid[row][c] = 'sim';
-        }
-
-        const score = this._evaluateGrid(simGrid);
-        if (score > bestScore) {
+        const score = this._simulatePlacement(testPiece, col, board);
+        if (score !== null && score > bestScore) {
           bestScore = score;
           bestMove = { rotation: rot, col };
         }
@@ -142,6 +113,35 @@ export class BotPlayer {
     }
 
     return bestMove;
+  }
+
+  _pieceAtRotation(piece, targetRotation) {
+    const rotationCount = piece.shape.length;
+    const testPiece = piece.clone();
+    const steps = (targetRotation - piece.rotation + rotationCount) % rotationCount;
+    for (let i = 0; i < steps; i++) {
+      testPiece.rotation = (testPiece.rotation + 1) % rotationCount;
+    }
+    return testPiece;
+  }
+
+  _simulatePlacement(testPiece, col, board) {
+    const trial = testPiece.clone();
+    trial.col = col;
+
+    if (!board.canPlace(trial.getBlocks())) return null;
+
+    while (trial.move(1, 0, board)) {/* drop to rest */}
+
+    const blocks = trial.getBlocks();
+    if (blocks.length === 0 || blocks.every(b => b.row < 0)) return null;
+
+    const simGrid = board.grid.map(r => [...r]);
+    for (const { row, col: c } of blocks) {
+      if (row >= 0 && row < ROWS) simGrid[row][c] = 'sim';
+    }
+
+    return this._evaluateGrid(simGrid);
   }
 
   _evaluateGrid(grid) {
@@ -193,32 +193,35 @@ export class BotPlayer {
   }
 
   _executeMove(targetRotation, targetCol) {
-    const g = this.game;
-    if (!g.currentPiece) return;
+    if (!this.game.currentPiece) return;
+    this._rotatePiece(targetRotation);
+    this._translatePiece(targetCol);
+    this.game.hardDrop();
+  }
 
-    const piece = g.currentPiece;
+  _rotatePiece(targetRotation) {
+    const { currentPiece: piece, board } = this.game;
     const rotationCount = piece.shape.length;
-    const rotations = (targetRotation - piece.rotation + rotationCount) % rotationCount;
-
-    for (let i = 0; i < rotations; i++) {
-      piece.rotate('cw', g.board);
+    const steps = (targetRotation - piece.rotation + rotationCount) % rotationCount;
+    for (let i = 0; i < steps; i++) {
+      piece.rotate('cw', board);
     }
-    g.computeGhost();
+    this.game.computeGhost();
+  }
 
+  _translatePiece(targetCol) {
+    const { currentPiece: piece, board } = this.game;
     const dc = targetCol - piece.col;
     const step = dc > 0 ? 1 : -1;
     for (let i = 0; i < Math.abs(dc); i++) {
-      piece.move(0, step, g.board);
+      piece.move(0, step, board);
     }
-    g.computeGhost();
-
-    g.hardDrop();
+    this.game.computeGhost();
   }
 
   _executeRandomMove() {
-    const g = this.game;
-    if (!g.currentPiece) return;
-    const rot = Math.floor(Math.random() * g.currentPiece.shape.length);
+    if (!this.game.currentPiece) return;
+    const rot = Math.floor(Math.random() * this.game.currentPiece.shape.length);
     const col = Math.floor(Math.random() * COLS);
     this._executeMove(rot, col);
   }

@@ -4,7 +4,7 @@ import { Renderer } from './renderer.js';
 import { ParticleSystem } from './particles.js';
 import {
   COLS, ROWS, CELL_SIZE, TICK_SPEEDS, SCORING, GARBAGE_TABLE,
-  LINES_PER_LEVEL, KEYS, DAS_DELAY, DAS_RATE
+  LINES_PER_LEVEL, KEYS, DAS_DELAY, DAS_RATE, FLASH_DURATION, SOFT_DROP_INTERVAL
 } from './constants.js';
 import * as Sound from './sound.js';
 
@@ -21,7 +21,6 @@ export class Game {
     this.onLevelChange = options.onLevelChange || (() => {});
     this.onLineClear = options.onLineClear || (() => {});
     this.onGameOver = options.onGameOver || (() => {});
-    this.onBoardUpdate = options.onBoardUpdate || (() => {});
     this.onNextPiece = options.onNextPiece || (() => {});
     this.onGarbage = options.onGarbage || (() => {});
     this.noKeyboard = options.noKeyboard || false;
@@ -44,7 +43,7 @@ export class Game {
     // Line clear animation
     this.flashRows = null;
     this.flashStart = 0;
-    this.flashDuration = 400; // ms
+    this.flashDuration = FLASH_DURATION;
 
     // DAS state
     this.dasDirection = null;
@@ -183,9 +182,6 @@ export class Game {
     Sound.playLock();
     this.particles.lockEffect(blocks);
 
-    // Send board update for multiplayer
-    this.onBoardUpdate(this.board.getSnapshot(), this.score, this.lines, this.level);
-
     // Check for line clears
     const { count, rows } = this.board.clearLines();
     if (count > 0) {
@@ -229,10 +225,6 @@ export class Game {
   finishLineClear() {
     this.flashRows = null;
     this.state = 'playing';
-
-    // Send updated board
-    this.onBoardUpdate(this.board.getSnapshot(), this.score, this.lines, this.level);
-
     this.spawnPiece();
   }
 
@@ -382,7 +374,7 @@ export class Game {
     }
     // Schedule next soft drop
     if (this.softDropping) {
-      setTimeout(() => this.softDrop(), 50);
+      setTimeout(() => this.softDrop(), SOFT_DROP_INTERVAL);
     }
   }
 
