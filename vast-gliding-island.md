@@ -150,6 +150,26 @@ Tetris-bahlay/
 - **BotPlayer class** (`public/js/bot.js`) — board evaluator (holes, height, bumpiness, lines), `setTimeout`-based think loop, configurable think speed + error rate per personality
 - **Garbage wired directly** — player's `onGarbage` → botGame.receiveGarbage() and vice versa
 - **Game over overlay** shows REMATCH button for bot games; saves high score if player wins
+- **Bot taunts** — each personality fires random taunts during play, shown above their mini-board:
+  | Bot | Frequency | Style |
+  |---|---|---|
+  | Rookie | 4% per move | Confused — `"oops"`, `"im trying"` |
+  | Cleaner | 5% per move | Smug — `"clean."`, `"no holes pls"` |
+  | Aggressor | 15% per move | Trash talk — `"take that 🔥"`, `"enjoy the garbage"` |
+  | Pro | 5% per move | Cold — `"predictable"`, `"calculated"` |
+
+## Taunt / Quick-chat (post-launch)
+- **Keys `1`–`4`** during multiplayer or VS Bot game send a quick-chat message
+  | Key | Message |
+  |---|---|
+  | `1` | GG |
+  | `2` | Nice! |
+  | `3` | Nooo! |
+  | `4` | 🔥 Let's go |
+- Message pops above opponent's mini-board for 2s (orange badge, scale-in animation)
+- **TAUNT** legend box shown in left panel alongside CONTROLS — hidden in solo mode
+- Multiplayer: sent via `game:taunt` socket event, relayed as `opponent:taunt`
+- VS Bot: shown locally above bot's board; bot fires back on its own schedule
 
 ## Networking Optimizations (post-launch)
 - **Palette encoding** — board state sent as 200-char string (1 char/cell) instead of 20×10 hex color array; ~1.5KB → ~200 bytes per tick (~87% reduction)
