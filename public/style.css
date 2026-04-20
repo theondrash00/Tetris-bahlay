@@ -195,6 +195,17 @@ body {
   color: var(--accent-primary);
 }
 
+.btn-blue {
+  background: transparent;
+  color: #2979ff;
+  border-color: #2979ff;
+}
+
+.btn-blue:hover {
+  background: rgba(41, 121, 255, 0.1);
+  box-shadow: 0 0 20px rgba(41, 121, 255, 0.3);
+}
+
 /* Shared centered panel container (lobby / highscores / whats-new / bot-select) */
 .panel-container {
   text-align: center;
