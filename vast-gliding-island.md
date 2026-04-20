@@ -147,7 +147,7 @@ Tetris-bahlay/
 
 ## What's New screen (post-launch)
 - **WHAT'S NEW ✦** button at bottom of menu (dimmed outline style) opens a dedicated changelog screen
-- Lists 4 entries with NEW/UPDATE badges: VS Bot, instant rematch, multiplayer UX, controls legend
+- Lists 5 entries with NEW/UPDATE badges: VS Bot, instant rematch, multiplayer UX, controls legend, taunt system
 - BACK returns to menu
 
 ## VS Bot Feature (post-launch)
