@@ -186,6 +186,7 @@ Tetris-bahlay/
 
 ## Multiplayer UX Improvements (post-launch)
 - **Copy room code button** — `⧉` icon next to room code in lobby, copies to clipboard, shows toast
+- **Invite link** — `🔗` icon next to room code copies a shareable URL (`?join=XXXX`); opening the link auto-navigates to lobby with room code pre-filled — P2 only needs to enter their name and click Join; Back to Menu cleans up the query param
 - **Player name above board** — your name shown above the game canvas in green during multiplayer (from lobby name input)
 - **Rematch flow (Option B):**
   - Player A clicks REMATCH → button disables, toast shown, `game:rematch` sent to server
