@@ -193,6 +193,15 @@
             <span class="key">Space</span><span class="key-desc">Hard drop</span>
           </div>
         </div>
+        <div id="taunt-legend" class="info-box controls-legend hidden">
+          <label>TAUNT</label>
+          <div class="controls-grid">
+            <span class="key">1</span><span class="key-desc">GG</span>
+            <span class="key">2</span><span class="key-desc">Nice!</span>
+            <span class="key">3</span><span class="key-desc">Nooo!</span>
+            <span class="key">4</span><span class="key-desc">🔥 Let's go</span>
+          </div>
+        </div>
       </div>
 
       <div class="game-canvas-wrapper">
@@ -207,8 +216,9 @@
         </div>
 
         <div id="opponent-section" class="opponent-section hidden">
-          <div class="info-box">
+          <div class="info-box" style="position:relative">
             <label id="opponent-name-label">OPPONENT</label>
+            <div id="taunt-opp-toast" class="taunt-opp-toast hidden"></div>
             <canvas id="opponent-canvas" width="150" height="300"></canvas>
           </div>
           <div class="info-box">

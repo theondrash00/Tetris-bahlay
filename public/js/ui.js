@@ -43,6 +43,24 @@ export function hideOpponentSection() {
   if (section) section.classList.add('hidden');
 }
 
+export function showTauntLegend() {
+  document.getElementById('taunt-legend')?.classList.remove('hidden');
+}
+
+export function hideTauntLegend() {
+  document.getElementById('taunt-legend')?.classList.add('hidden');
+}
+
+let tauntToastTimer = null;
+export function showOpponentTaunt(message) {
+  const el = document.getElementById('taunt-opp-toast');
+  if (!el) return;
+  el.textContent = message;
+  el.classList.remove('hidden');
+  if (tauntToastTimer) clearTimeout(tauntToastTimer);
+  tauntToastTimer = setTimeout(() => el.classList.add('hidden'), 2000);
+}
+
 export function showCountdown(seconds, callback) {
   const overlay = document.getElementById('overlay-countdown');
   const text = document.getElementById('countdown-text');

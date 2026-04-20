@@ -103,6 +103,28 @@ body {
   letter-spacing: 0.05em;
 }
 
+.taunt-opp-toast {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dk-orange);
+  color: var(--dk-black);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  z-index: 20;
+  animation: tauntPop 0.2s ease-out;
+}
+
+@keyframes tauntPop {
+  from { transform: translateX(-50%) scale(0.7); opacity: 0; }
+  to   { transform: translateX(-50%) scale(1);   opacity: 1; }
+}
+
 /* Menu two-column layout: main content + sidebar */
 .menu-layout {
   display: flex;

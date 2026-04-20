@@ -155,6 +155,9 @@ export const FLASH_DURATION = 400;      // ms for line-clear flash animation
 export const SOFT_DROP_INTERVAL = 50;   // ms between soft-drop ticks
 export const COUNTDOWN_GO_DURATION = 600; // ms "GO!" stays on screen before game starts
 
+// Taunt quick-chat (keys 1–4)
+export const TAUNTS = ['GG', 'Nice!', 'Nooo!', '🔥 Let\'s go'];
+
 // Particles
 export const PARTICLE_GRAVITY = 0.12;       // vy added per update tick
 export const PARTICLE_STAGGER_MS = 30;      // ms delay per row in game-over effect

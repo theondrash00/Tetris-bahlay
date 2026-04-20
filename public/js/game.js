@@ -4,7 +4,7 @@ import { Renderer } from './renderer.js';
 import { ParticleSystem } from './particles.js';
 import {
   COLS, ROWS, CELL_SIZE, TICK_SPEEDS, SCORING, GARBAGE_TABLE,
-  LINES_PER_LEVEL, KEYS, DAS_DELAY, DAS_RATE, FLASH_DURATION, SOFT_DROP_INTERVAL
+  LINES_PER_LEVEL, KEYS, DAS_DELAY, DAS_RATE, FLASH_DURATION, SOFT_DROP_INTERVAL, TAUNTS
 } from './constants.js';
 import * as Sound from './sound.js';
 
@@ -23,6 +23,7 @@ export class Game {
     this.onGameOver = options.onGameOver || (() => {});
     this.onNextPiece = options.onNextPiece || (() => {});
     this.onGarbage = options.onGarbage || (() => {});
+    this.onTaunt = options.onTaunt || (() => {});
     this.noKeyboard = options.noKeyboard || false;
 
     this.board = null;
@@ -315,6 +316,12 @@ export class Game {
       case KEYS.HARD_DROP:
         if (!e.repeat) {
           this.hardDrop();
+        }
+        break;
+      case 'Digit1': case 'Digit2': case 'Digit3': case 'Digit4':
+        if (!e.repeat) {
+          const idx = parseInt(e.code.replace('Digit', '')) - 1;
+          this.onTaunt(TAUNTS[idx]);
         }
         break;
     }

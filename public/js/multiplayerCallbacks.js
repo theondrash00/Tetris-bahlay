@@ -82,6 +82,8 @@ export function setupMultiplayerCallbacks() {
     }, 500);
   });
 
+  mp.on('opponentTaunt', (data) => UI.showOpponentTaunt(data.message));
+
   mp.on('opponentDisconnected', () => UI.showToast('Opponent disconnected'));
 
   mp.on('rematchRequested', (data) => {

@@ -3,6 +3,7 @@ import { Renderer } from './renderer.js';
 import { BotPlayer, BOT_PERSONALITIES } from './bot.js';
 import { COLS, ROWS, CELL_SIZE } from './constants.js';
 import * as UI from './ui.js';
+import { showTauntLegend, hideTauntLegend, showOpponentTaunt } from './ui.js';
 import * as HighScores from './highscores.js';
 
 export const state = {
@@ -85,6 +86,7 @@ export function startSoloGame() {
   UI.showScreen('game-screen');
   UI.hideOpponentSection();
   UI.setMyNameLabel('');
+  hideTauntLegend();
 
   const { canvas } = getCanvases();
   state.renderer = new Renderer(canvas);
@@ -117,6 +119,7 @@ export function startBotGame(botKey) {
   botCanvas.width = COLS * CELL_SIZE;
   botCanvas.height = ROWS * CELL_SIZE;
 
+  showTauntLegend();
   UI.showCountdown(3, () => {
     state.game = createGame(canvas, {
       onGameOver: (data) => {
@@ -124,7 +127,8 @@ export function startBotGame(botKey) {
       },
       onGarbage: (lines) => {
         if (state.botGame && state.botGame.state === 'playing') state.botGame.receiveGarbage(lines);
-      }
+      },
+      onTaunt: (msg) => showOpponentTaunt(msg)
     });
 
     state.botGame = new Game(botCanvas, {
@@ -181,10 +185,12 @@ function handleBotGameOver(playerWon, data) {
 export function startMultiplayerGame() {
   const { canvas } = getCanvases();
   state.renderer = new Renderer(canvas);
+  showTauntLegend();
 
   state.game = createGame(canvas, {
     onGameOver: (data) => handleGameOver(data),
-    onGarbage: (lines) => state.multiplayer.sendGarbage(lines)
+    onGarbage: (lines) => state.multiplayer.sendGarbage(lines),
+    onTaunt: (msg) => state.multiplayer.sendTaunt(msg)
   });
 
   state.multiplayer.startSync(() => {
@@ -203,6 +209,7 @@ export function startMultiplayerGame() {
 export function backToMenu() {
   UI.hideGameOver();
   UI.hideHighScoreEntry();
+  hideTauntLegend();
   if (state.game) state.game.stop();
   stopBotGame();
   if (state.multiplayer) {

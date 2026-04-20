@@ -154,6 +154,11 @@ io.on('connection', (socket) => {
     socket.to(currentRoom).emit('opponent:garbage', data);
   });
 
+  socket.on('game:taunt', ({ message }) => {
+    if (!currentRoom) return;
+    socket.to(currentRoom).emit('opponent:taunt', { message });
+  });
+
   socket.on('game:topout', () => {
     if (!currentRoom) return;
     const room = rooms.get(currentRoom);

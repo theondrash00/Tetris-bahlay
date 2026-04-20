@@ -89,6 +89,10 @@ export class MultiplayerClient {
     this.socket.emit('game:rematch');
   }
 
+  sendTaunt(message) {
+    this.socket.emit('game:taunt', { message });
+  }
+
   // Callbacks
   on(event, callback) {
     this.callbacks[event] = callback;
@@ -137,6 +141,10 @@ export class MultiplayerClient {
 
     this.socket.on('rematch:requested', (data) => {
       this.callbacks.rematchRequested?.(data);
+    });
+
+    this.socket.on('opponent:taunt', (data) => {
+      this.callbacks.opponentTaunt?.(data);
     });
   }
 }
