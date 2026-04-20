@@ -187,12 +187,14 @@ document.getElementById('btn-back-menu').addEventListener('click', () => {
   }
   UI.showScreen('menu-screen');
   history.replaceState(null, '', location.pathname);
+  document.getElementById('btn-create-room').disabled = false;
 });
 
 // --- Auto-join via invite link (?join=XXXX) ---
 const joinCode = new URLSearchParams(location.search).get('join');
 if (joinCode && joinCode.length === 4) {
   document.getElementById('room-code-input').value = joinCode.toUpperCase();
+  document.getElementById('btn-create-room').disabled = true;
   state.isMultiplayer = true;
   state.isBotGame = false;
   initMultiplayer();
