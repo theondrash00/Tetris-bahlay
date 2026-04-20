@@ -145,6 +145,15 @@ document.getElementById('btn-copy-code').addEventListener('click', () => {
     .catch(() => UI.showToast('Failed to copy — try manually'));
 });
 
+document.getElementById('btn-copy-link').addEventListener('click', () => {
+  const code = document.getElementById('room-code-value').textContent;
+  if (!code) return;
+  const url = `${location.origin}${location.pathname}?join=${code}`;
+  navigator.clipboard.writeText(url)
+    .then(() => UI.showToast('Invite link copied!'))
+    .catch(() => UI.showToast('Failed to copy — try manually'));
+});
+
 document.getElementById('btn-create-room').addEventListener('click', () => {
   if (!state.multiplayer) return;
   state.myName = document.getElementById('player-name').value.trim() || 'Player';
@@ -177,4 +186,14 @@ document.getElementById('btn-back-menu').addEventListener('click', () => {
     state.multiplayer = null;
   }
   UI.showScreen('menu-screen');
+  history.replaceState(null, '', location.pathname);
 });
+
+// --- Auto-join via invite link (?join=XXXX) ---
+const joinCode = new URLSearchParams(location.search).get('join');
+if (joinCode && joinCode.length === 4) {
+  document.getElementById('room-code-input').value = joinCode.toUpperCase();
+  state.isMultiplayer = true;
+  state.isBotGame = false;
+  initMultiplayer();
+}
