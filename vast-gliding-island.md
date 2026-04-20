@@ -143,6 +143,13 @@ Tetris-bahlay/
 - **Garbage wired directly** — player's `onGarbage` → botGame.receiveGarbage() and vice versa
 - **Game over overlay** shows REMATCH button for bot games; saves high score if player wins
 
+## Networking Optimizations (post-launch)
+- **Palette encoding** — board state sent as 200-char string (1 char/cell) instead of 20×10 hex color array; ~1.5KB → ~200 bytes per tick (~87% reduction)
+  - `BOARD_PALETTE` (index→hex) + `BOARD_PALETTE_INDEX` (hex→char) added to `constants.js`
+  - `Board.getEncodedSnapshot()` encodes: `'0'`=empty, `'1'`–`'8'`=piece/garbage colors
+  - `Renderer.renderOpponentBoard()` auto-detects string vs array, decodes palette index back to hex
+- **Skip-unchanged frames** — `startSync` in `multiplayer.js` compares encoded board string to last sent; skips emit if identical (free bandwidth while piece is airborne)
+
 ## Multiplayer UX Improvements (post-launch)
 - **Copy room code button** — `⧉` icon next to room code in lobby, copies to clipboard, shows toast
 - **Player name above board** — your name shown above the game canvas in green during multiplayer (from lobby name input)
