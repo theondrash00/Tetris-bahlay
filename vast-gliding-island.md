@@ -106,6 +106,7 @@ Tetris-bahlay/
 ---
 
 ## Known Bugs Fixed
+- **Multiplayer opponent board frozen during play:** Skip-unchanged optimization compared only `board.grid` (locked cells), which doesn't include the active falling piece. Board string was identical every tick while a piece was airborne → opponent received no updates. Fix: removed skip-unchanged; palette encoding alone provides the payload reduction.
 - **Multiplayer "Room is Full" on join:** The joining client wasn't storing the room code before receiving the `room:joined` event, causing the UI to not show the room panel. Fix: `multiplayer.js` now sets `this.roomCode` in `joinRoom()` before emitting the socket event. `main.js` `roomJoined` callback now calls `UI.showRoomInfo()` for the joiner too.
 
 ## UI Changes (post-launch)
@@ -148,7 +149,7 @@ Tetris-bahlay/
   - `BOARD_PALETTE` (index→hex) + `BOARD_PALETTE_INDEX` (hex→char) added to `constants.js`
   - `Board.getEncodedSnapshot()` encodes: `'0'`=empty, `'1'`–`'8'`=piece/garbage colors
   - `Renderer.renderOpponentBoard()` auto-detects string vs array, decodes palette index back to hex
-- **Skip-unchanged frames** — `startSync` in `multiplayer.js` compares encoded board string to last sent; skips emit if identical (free bandwidth while piece is airborne)
+- **Skip-unchanged frames** — attempted but reverted: the locked grid doesn't include the active falling piece, so the string was identical every tick while a piece was in motion, causing the opponent board to freeze. Palette encoding alone gives the full bandwidth benefit.
 
 ## Multiplayer UX Improvements (post-launch)
 - **Copy room code button** — `⧉` icon next to room code in lobby, copies to clipboard, shows toast
