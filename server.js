@@ -38,6 +38,20 @@ function cleanupRoom(code) {
   }
 }
 
+function startCountdown(roomCode) {
+  let count = 3;
+  const interval = setInterval(() => {
+    io.to(roomCode).emit('game:countdown', { seconds: count });
+    count--;
+    if (count < 0) {
+      clearInterval(interval);
+      const room = rooms.get(roomCode);
+      if (room) room.state = 'playing';
+      io.to(roomCode).emit('game:start');
+    }
+  }, 1000);
+}
+
 io.on('connection', (socket) => {
   let currentRoom = null;
 
@@ -130,17 +144,8 @@ io.on('connection', (socket) => {
     // Check if both players are ready
     if (room.players.length === 2 && room.players.every(p => p.ready)) {
       room.state = 'countdown';
-      let count = 3;
-      const interval = setInterval(() => {
-        io.to(currentRoom).emit('game:countdown', { seconds: count });
-        count--;
-        if (count < 0) {
-          clearInterval(interval);
-          room.state = 'playing';
-          room.players.forEach(p => { p.alive = true; p.ready = false; });
-          io.to(currentRoom).emit('game:start');
-        }
-      }, 1000);
+      room.players.forEach(p => { p.alive = true; p.ready = false; });
+      startCountdown(currentRoom);
     }
   });
 
@@ -198,17 +203,7 @@ io.on('connection', (socket) => {
       room.state = 'countdown';
       room.rematchRequests = [];
       room.players.forEach(p => { p.alive = true; p.ready = false; });
-
-      let count = 3;
-      const interval = setInterval(() => {
-        io.to(currentRoom).emit('game:countdown', { seconds: count });
-        count--;
-        if (count < 0) {
-          clearInterval(interval);
-          room.state = 'playing';
-          io.to(currentRoom).emit('game:start');
-        }
-      }, 1000);
+      startCountdown(currentRoom);
     }
   });
 

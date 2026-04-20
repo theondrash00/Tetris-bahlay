@@ -183,10 +183,6 @@ export class ParticleSystem {
     ctx.restore();
   }
 
-  getShakeOffset() {
-    return { x: this.shakeX, y: this.shakeY };
-  }
-
   hasActiveParticles() {
     return this.active.length > 0 || this.shakeTimer > 0;
   }

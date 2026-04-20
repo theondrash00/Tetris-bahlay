@@ -96,9 +96,5 @@ export function createBagRandomizer() {
       if (bag.length === 0) refill();
       return bag.pop();
     },
-    peek() {
-      if (bag.length === 0) refill();
-      return bag[bag.length - 1];
-    }
   };
 }

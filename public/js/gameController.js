@@ -3,8 +3,9 @@ import { Renderer } from './renderer.js';
 import { BotPlayer, BOT_PERSONALITIES } from './bot.js';
 import { COLS, ROWS, CELL_SIZE } from './constants.js';
 import * as UI from './ui.js';
-import { showTauntLegend, hideTauntLegend, showOpponentTaunt } from './ui.js';
 import * as HighScores from './highscores.js';
+
+const { showTauntLegend, hideTauntLegend, showOpponentTaunt } = UI;
 
 export const state = {
   game: null,
