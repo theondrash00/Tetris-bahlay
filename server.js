@@ -6,7 +6,13 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const isTest = process.env.NODE_ENV === 'test';
+if (isTest) console.log('[server] test mode: fast ping timeout');
+const io = new Server(server, {
+  // Faster disconnect detection in test environments
+  pingTimeout: isTest ? 2000 : 20000,
+  pingInterval: isTest ? 1000 : 25000,
+});
 
 const PORT = process.env.PORT || 3000;
 
@@ -212,6 +218,7 @@ io.on('connection', (socket) => {
     const room = rooms.get(currentRoom);
     if (!room) return;
 
+    console.log(`[disconnect] socket=${socket.id.slice(0,6)} room.state=${room.state} players=${room.players.length}`);
     room.players = room.players.filter(p => p.id !== socket.id);
 
     if (room.state === 'playing' && room.players.length === 1) {

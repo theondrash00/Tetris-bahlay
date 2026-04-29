@@ -35,6 +35,16 @@ Tetris-bahlay/
 ├── package.json              # express + socket.io deps
 ├── server.js                 # Express static server + Socket.io room/relay logic
 ├── vast-gliding-island.md    # This file
+├── CLAUDE.md                 # Project guide for AI assistants
+├── playwright.config.js      # Playwright test config + webServer setup
+├── start-test-server.js      # Test wrapper: sets NODE_ENV=test, requires server.js
+├── .github/
+│   └── workflows/
+│       └── playwright.yml    # CI: runs Playwright on push/PR to main
+├── tests/
+│   ├── navigation.spec.js    # Screen transitions, back buttons
+│   ├── solo.spec.js          # Solo game flow: start → gameplay → game over
+│   └── multiplayer.spec.js   # Two-context room create/join → ready → game starts
 ├── public/
 │   ├── index.html            # Single page with layered screens (menu, lobby, game, scores)
 │   ├── style.css             # Full styling with DK palette as CSS vars
@@ -198,6 +208,23 @@ Tetris-bahlay/
   - When both have sent `game:rematch`, server triggers 3-2-1 countdown immediately → new game starts
   - No lobby re-entry needed, same room/connection reused
   - **Note:** server must be restarted to pick up new socket handlers after code changes
+
+---
+
+## Testing
+
+Integration tests use **Playwright** (`@playwright/test`). CI runs automatically on push/PR to `main` via GitHub Actions.
+
+```bash
+npm test           # run all tests
+npm run test:ui    # interactive UI mode
+npm run test:report # view last HTML report
+```
+
+- **Test server** — `start-test-server.js` sets `NODE_ENV=test` then requires `server.js`; server detects test mode and uses faster Socket.IO ping timeout (2s vs 20s) for quicker disconnect detection
+- **Multiplayer client** — forces `websocket` transport (no long-polling fallback) for faster connection in tests
+- **Multiplayer tests** — two independent `browser.newContext()` instances for real Socket.IO round-trips, no mocking
+- **CI** — `.github/workflows/playwright.yml`: checkout → Node 20 → `npm ci` → install Chromium → run tests → upload report on failure
 
 ---
 

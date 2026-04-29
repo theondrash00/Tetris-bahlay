@@ -15,7 +15,9 @@ export class MultiplayerClient {
         reject(new Error('Socket.io client not loaded'));
         return;
       }
-      this.socket = io();
+      this.socket = io({ transports: ['websocket'] });
+      // Expose socket for Playwright disconnect tests
+      if (typeof window !== 'undefined') window.__mpSocket = this.socket;
       this.socket.on('connect', () => {
         this.setupListeners();
         resolve();
